@@ -1,80 +1,107 @@
 # 🚗 ET SI ? — Décide sur la route
 
-**ET SI ?** est une mini-application web éducative autour du **Code de la route**.
+**ET SI ?** est une application web interactive d'entraînement au **Code de la route**, basée sur la génération dynamique de situations de conduite.
 
-Le principe : placer le joueur face à différentes situations de conduite afin de l'aider à **observer, anticiper et prendre la bonne décision** lorsqu'un événement survient sur la route.
+Le projet combine **JavaScript**, **Make** et l'**IA** afin de proposer au joueur des scénarios variés dans lesquels il doit observer une situation, anticiper un danger et prendre la bonne décision.
 
-## 🎯 Objectif
+## 💡 Le concept
 
-L'application permet de s'entraîner de manière interactive à différentes situations de conduite.
+> **Et si cette situation arrivait réellement sur la route, que ferais-tu ?**
 
-Pour chaque situation, le joueur doit :
+Au lieu de proposer uniquement des questions prédéfinies, l'application s'appuie sur une automatisation **Make pour générer les situations de conduite**.
 
-1. Observer la scène.
-2. Comprendre le contexte.
-3. Faire face à un événement **« ET SI… »**.
-4. Choisir une action parmi plusieurs propositions.
-5. Découvrir les conséquences de son choix.
+Le fonctionnement repose sur plusieurs étapes :
 
-L'objectif est de développer les bons réflexes et l'anticipation nécessaires à une conduite sûre.
+1. L'application demande une nouvelle situation.
+2. La demande est envoyée à **Make via un webhook**.
+3. **Make déclenche le processus de génération de la situation.**
+4. L'IA génère un scénario de Code de la route avec son contexte, l'événement qui survient et les différentes actions possibles.
+5. Make récupère et structure la situation générée.
+6. La situation est renvoyée à l'application.
+7. JavaScript adapte la scène visuelle au scénario reçu.
+8. Le joueur choisit l'action qui lui semble la plus adaptée.
+9. L'application lui indique les conséquences de sa décision.
 
-## 🎮 Fonctionnement
+Ainsi, les situations ne sont pas toutes écrites directement dans le code : elles peuvent être **générées dynamiquement grâce au scénario Make et à l'IA**.
 
-Depuis la page d'accueil, le joueur peut lancer une situation de conduite.
+## 🤖 Génération des situations avec Make
 
-Chaque scénario présente une scène dans laquelle différents événements peuvent apparaître : véhicules, piétons, obstacles, changements de circulation ou autres situations nécessitant une réaction.
+**Make joue un rôle central dans le projet.**
 
-Le joueur choisit ensuite la décision qui lui semble la plus adaptée.
+Il sert d'intermédiaire entre l'application web et l'IA chargée de créer les situations.
 
-Les données liées aux situations et aux actions du joueur peuvent être envoyées vers un **webhook Make**.
+Le scénario Make permet notamment de :
 
-Make permet ensuite d'automatiser le traitement de ces informations et leur transmission vers les outils connectés au projet.
+* recevoir une demande provenant de l'application ;
+* déclencher la génération d'une nouvelle situation ;
+* transmettre les informations nécessaires à l'IA ;
+* récupérer la situation générée ;
+* structurer les données obtenues ;
+* renvoyer le scénario à l'application dans un format exploitable par JavaScript.
 
-## ⚙️ Automatisation avec Make
+### Architecture simplifiée
 
-Le projet intègre **Make** afin d'ajouter une couche d'automatisation au fonctionnement de l'application.
+```text
+Application ET SI ?
+        ↓
+     Webhook
+        ↓
+       Make
+        ↓
+        IA
+        ↓
+Génération d'une situation
+        ↓
+       Make
+        ↓
+Situation structurée
+        ↓
+Application JavaScript
+        ↓
+Génération / adaptation de la scène
+        ↓
+Choix du joueur
+```
 
-Lorsqu'une situation est jouée, JavaScript peut envoyer les informations correspondantes à un **webhook Make**.
+## 🎮 Une situation
 
-Exemples de données transmises :
+Une situation générée peut contenir différentes informations permettant à l'application de construire le scénario, par exemple :
 
 ```json
 {
-  "event": "evenement rencontré",
-  "weather": "conditions météo",
-  "action": "décision du joueur",
-  "timestamp": "date et heure"
+  "scene": "route urbaine",
+  "weather": "pluie",
+  "event": "un piéton s'approche du passage piéton",
+  "question": "Que fais-tu ?",
+  "actions": [
+    "Je ralentis",
+    "Je continue à la même vitesse",
+    "J'accélère"
+  ]
 }
 ```
 
-Le scénario Make reçoit ensuite les données et peut les traiter automatiquement.
+JavaScript utilise ensuite ces informations pour afficher une scène correspondant au scénario et proposer les différents choix au joueur.
 
-### Flux simplifié
+## 🎯 Objectif
 
-```text
-Joueur
-   ↓
-Application ET SI ?
-   ↓
-JavaScript
-   ↓
-Webhook Make
-   ↓
-Scénario d'automatisation Make
-   ↓
-Outil / base de données connecté(e)
-```
+L'objectif de **ET SI ?** est de proposer un apprentissage plus dynamique du Code de la route.
 
-Cette architecture permet de séparer la partie **jeu** de la partie **automatisation et gestion des données**.
+Plutôt que de mémoriser uniquement des réponses, le joueur est placé dans une logique de :
+
+**Observer → Comprendre → Anticiper → Décider**
+
+La génération des situations permet également de proposer des scénarios plus variés et de limiter la répétition des mêmes exercices.
 
 ## 🛠️ Technologies utilisées
 
 * **HTML5** — structure de l'application
-* **CSS3** — interface et création des scènes de conduite
-* **JavaScript** — scénarios, interactions et logique du jeu
-* **LocalStorage** — sauvegarde locale des préférences
-* **Make** — automatisation des flux de données
-* **Webhook Make** — communication entre l'application et le scénario d'automatisation
+* **CSS3** — interface et représentation des scènes
+* **JavaScript** — logique du jeu et adaptation dynamique des scènes
+* **Make** — orchestration et automatisation de la génération des situations
+* **Webhook Make** — communication entre l'application et Make
+* **IA** — génération dynamique des scénarios du Code de la route
+* **LocalStorage** — sauvegarde de certaines préférences du joueur
 
 ## 📁 Structure du projet
 
@@ -92,70 +119,64 @@ ET-SI/
 └── README.md
 ```
 
-### Page d'accueil
+### `index.html`
 
-`index.html`
-Page d'entrée de l'application.
+Page d'accueil de l'application.
 
-`landing.css`
+### `landing.css`
+
 Styles de la page d'accueil.
 
-`landing.js`
+### `landing.js`
+
 Gestion des interactions et des préférences du joueur.
 
-### Jeu
+### `jeu.html`
 
-`jeu.html`
-Interface principale des situations de conduite.
+Interface principale dans laquelle les situations sont présentées.
 
-`style.css`
-Styles du jeu et des différentes scènes.
+### `style.css`
 
-`script.js`
-Gestion des scénarios, événements, choix, conséquences et communication avec le webhook Make.
+Gestion de l'apparence du jeu et des différentes scènes de conduite.
 
-## 🌙 Thème clair / sombre
+### `script.js`
 
-L'application propose un **mode clair et un mode sombre**.
+Cœur du fonctionnement côté navigateur :
 
-Le thème choisi est conservé grâce au `localStorage`.
-
-## 👤 Joueur
-
-Le joueur peut choisir son avatar.
-
-Ce choix est également conservé localement afin de personnaliser l'expérience.
+* communication avec Make ;
+* récupération des situations générées ;
+* interprétation des données reçues ;
+* adaptation de la scène ;
+* affichage des événements ;
+* gestion des choix du joueur ;
+* affichage des conséquences.
 
 ## ▶️ Lancer le projet
 
 1. Télécharger ou cloner le projet.
-2. Ouvrir le dossier.
-3. Lancer `index.html` dans un navigateur.
-4. Démarrer une situation depuis la page d'accueil.
-5. Effectuer les différents choix proposés.
+2. Configurer le webhook correspondant au scénario **Make**.
+3. Activer le scénario Make.
+4. Lancer l'application web.
+5. Démarrer une situation.
+6. Make et l'IA génèrent le scénario qui sera ensuite interprété par l'application.
 
-Pour utiliser l'automatisation, le scénario correspondant doit également être configuré et activé dans **Make**.
-
-## 💡 Concept
-
-> **Observer. Anticiper. Décider.**
-
-ET SI ? transforme des situations du Code de la route en scénarios interactifs afin de rendre l'apprentissage plus concret et dynamique.
-
-Le projet combine ainsi **développement web** et **automatisation No-Code avec Make**.
+> ⚠️ L'URL du webhook Make ne doit pas être publiée directement dans le README si elle permet de déclencher publiquement le scénario.
 
 ## 🚧 Évolutions possibles
 
-* ajout de nouvelles situations de conduite ;
-* nouveaux événements « ET SI… » ;
-* génération de davantage de scénarios ;
-* amélioration des illustrations selon la situation ;
-* système de score et de progression ;
-* statistiques sur les décisions du joueur ;
-* enrichissement des automatisations Make ;
-* historique des situations et des choix.
+Le projet pourra notamment évoluer avec :
+
+* davantage de types de routes et de décors ;
+* des situations plus complexes ;
+* une meilleure correspondance entre la situation générée et la scène visuelle ;
+* différents niveaux de difficulté ;
+* un système de score ;
+* un historique des décisions ;
+* des statistiques sur les erreurs du joueur ;
+* une personnalisation des situations selon les difficultés de l'utilisateur.
 
 ---
 
 **ET SI ? — Décide sur la route** 🚘
-Projet web interactif combinant **JavaScript et automatisation Make**.
+
+Une application qui combine **développement web, automatisation Make et intelligence artificielle** pour générer des situations interactives d'entraînement au Code de la route.
