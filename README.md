@@ -73,6 +73,8 @@ Les situations sont enregistrées dans le fichier :
 
 situations.json
 
+---
+
 ## 🚀 Évolutions prévues
 
 Plusieurs évolutions sont prévues afin de transformer progressivement le projet en une expérience d’entraînement plus complète.
@@ -151,6 +153,8 @@ les informations nécessaires à la génération du visuel.
 
 À terme, cela permettrait de disposer d’un nombre beaucoup plus important de situations et de proposer des entraînements plus variés.
 
+---
+
 ## 💡 Vision du projet
 
 L’objectif à terme est de faire de ET SI ? un outil d’entraînement interactif capable d’adapter les situations au niveau et aux difficultés du joueur.
@@ -158,6 +162,8 @@ L’objectif à terme est de faire de ET SI ? un outil d’entraînement interac
 Le projet pourrait ainsi proposer un parcours de plus en plus personnalisé :
 
 Observer → Anticiper → Décider → Progresser
+
+---
 
 ## 👩🏻‍💻 Développé par
 
