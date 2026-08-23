@@ -71,7 +71,6 @@ L’utilisateur choisit une réponse et obtient immédiatement la correction.
 
 Les situations sont enregistrées dans le fichier :
 
-```text
 situations.json
 
 ## 🚀 Évolutions prévues
