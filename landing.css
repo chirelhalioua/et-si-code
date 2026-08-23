@@ -2570,34 +2570,146 @@ html[data-theme="light"] .theme-moon {
 
 
   .road-break {
-    min-height:
-      200px;
+     min-height: 240px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding:
+      24px 16px
+      0;
   }
 
 
+
   .road-break-car {
+     width: 125px;
+
+    left: 8%;
+
+    bottom: 32px;
+
+    z-index: 3;
+
+    animation:
+      roadCarDriveMobile
+      5.5s
+      ease-in-out
+      infinite
+      alternate;
+  }
+
+    @keyframes roadCarDriveMobile {
+
+    from {
+      transform:
+        translateX(0);
+    }
+
+    to {
+      transform:
+        translateX(80px);
+    }
+
+  }
+
+}
+
+
+
+  .road-message {
+    position: relative;
+
+    z-index: 5;
+
     width:
-      120px;
+      min(
+        300px,
+        calc(100% - 28px)
+      );
 
-    left:
-      3%;
+    margin: 0 auto;
 
-    bottom:
-      50px;
+    padding:
+      14px 18px;
+
+    border-radius:
+      13px;
+  }
+
+    .road-message small {
+    font-size: 10px;
+  }
+
+
+
+  .road-message strong {
+    font-size: 15px;
+
+    line-height: 1.25;
+  }
+
+
+  /* ROUTE PLUS BAS */
+
+  .road-break-line {
+    top: auto;
+
+    bottom: 68px;
+  }
+
+
+@media (max-width: 430px) {
+
+  .road-break {
+    min-height: 225px;
   }
 
 
   .road-message {
+    width:
+      calc(100% - 36px);
+
     padding:
-      18px 20px;
+      13px 14px;
   }
 
 
   .road-message strong {
-    font-size:
-      16px;
+    font-size: 14px;
   }
 
+
+  .road-break-car {
+    width: 105px;
+
+    left: 4%;
+
+    bottom: 30px;
+  }
+
+
+  .road-break-line {
+    bottom: 62px;
+  }
+
+
+  @keyframes roadCarDriveMobile {
+
+    from {
+      transform:
+        translateX(0);
+    }
+
+    to {
+      transform:
+        translateX(55px);
+    }
+
+  }
+
+}
 
   .avatar-selector {
     grid-template-columns:
