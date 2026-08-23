@@ -73,3 +73,95 @@ Les situations sont enregistrées dans le fichier :
 
 ```text
 situations.json
+
+## 🚀 Évolutions prévues
+
+Plusieurs évolutions sont prévues afin de transformer progressivement le projet en une expérience d’entraînement plus complète.
+
+## 🎚️ Niveaux de difficulté
+
+Ajouter un niveau à chaque situation :
+
+Facile
+Moyen
+Difficile
+
+La difficulté pourrait dépendre notamment :
+
+du nombre d’éléments à observer ;
+du temps disponible pour réagir ;
+de la complexité de la situation ;
+de la proximité entre plusieurs réponses possibles.
+🏆 Système de progression et de récompenses
+
+Créer un système permettant au joueur de savoir où il se situe.
+
+Par exemple :
+
+nombre de bonnes réponses ;
+taux de réussite ;
+séries de bonnes réponses ;
+points ;
+badges ;
+niveaux ;
+progression globale.
+
+L’objectif serait de rendre l’apprentissage plus motivant tout en permettant au joueur de suivre son évolution.
+
+## 🔎 Choix des situations
+
+Permettre au joueur de choisir ses entraînements en fonction de différents critères.
+
+Par exemple :
+
+Par catégorie :
+
+Piétons
+Dépassement
+Intersection
+Autoroute
+Travaux
+Passage à niveau
+Véhicules prioritaires
+etc.
+
+## Par niveau :
+
+Facile
+Moyen
+Difficile
+
+Il serait également possible de combiner les deux :
+
+Autoroute + niveau difficile
+
+## 🤖 Intégration de l'intelligence artificielle
+
+Une évolution importante du projet serait l’intégration de l’IA pour générer automatiquement de nouvelles situations de Code de la route.
+
+L’IA pourrait notamment générer :
+
+le contexte de la situation ;
+la question « ET SI… ? » ;
+les différentes réponses possibles ;
+la bonne réponse ;
+l’explication pédagogique ;
+la catégorie ;
+le niveau de difficulté ;
+les informations nécessaires à la génération du visuel.
+
+À terme, cela permettrait de disposer d’un nombre beaucoup plus important de situations et de proposer des entraînements plus variés.
+
+## 💡 Vision du projet
+
+L’objectif à terme est de faire de ET SI ? un outil d’entraînement interactif capable d’adapter les situations au niveau et aux difficultés du joueur.
+
+Le projet pourrait ainsi proposer un parcours de plus en plus personnalisé :
+
+Observer → Anticiper → Décider → Progresser
+
+## 👩🏻‍💻 Développé par
+
+Développé avec 💛 par Chirel
+
+👉 chirelhalioua.fr
