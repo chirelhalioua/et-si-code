@@ -1,0 +1,541 @@
+[
+  {
+    "course_title": "Les piétons",
+    "notion": "Anticiper à l'approche d'un passage piéton",
+    "title": "Un passage piéton devant toi",
+    "category": "Piétons",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_01_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_01_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules en ville et tu approches d'un passage piéton. La chaussée semble dégagée."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un piéton s'engageait soudainement sur le passage piéton ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Que fais-tu ?",
+        "options": [
+          {
+            "value": "continue",
+            "label": "Je continue à la même vitesse",
+            "correct": false,
+            "response": "Mauvaise réponse. Le piéton est engagé sur le passage piéton et tu dois lui céder le passage."
+          },
+          {
+            "value": "slow_stop",
+            "label": "Je ralentis et je m'arrête pour le laisser traverser",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois ralentir puis t'arrêter afin de laisser le piéton traverser en sécurité."
+          },
+          {
+            "value": "horn",
+            "label": "Je klaxonne pour qu'il s'arrête",
+            "correct": false,
+            "response": "Mauvaise réponse. Le klaxon ne remplace pas l'obligation de céder le passage au piéton."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Le dépassement",
+    "notion": "Vérifier la voie opposée avant de dépasser",
+    "title": "Un véhicule lent devant toi",
+    "category": "Dépassement",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_02_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_02_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu suis un véhicule sur une route à double sens."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un véhicule arrivait maintenant en sens inverse ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Quelle décision prends-tu ?",
+        "options": [
+          {
+            "value": "overtake",
+            "label": "Je dépasse immédiatement",
+            "correct": false,
+            "response": "Mauvaise réponse. Un véhicule arrive en face, le dépassement n'est donc pas possible en sécurité."
+          },
+          {
+            "value": "wait",
+            "label": "Je reste derrière et j'attends",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois rester derrière le véhicule jusqu'à ce que la voie opposée soit suffisamment dégagée."
+          },
+          {
+            "value": "accelerate",
+            "label": "J'accélère pour passer avant lui",
+            "correct": false,
+            "response": "Mauvaise réponse. Accélérer pour forcer le dépassement augmenterait fortement le risque de collision."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les piétons",
+    "notion": "Anticiper un piéton masqué",
+    "title": "Une rue avec des véhicules stationnés",
+    "category": "Piétons",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_03_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_03_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules dans une rue bordée de véhicules stationnés."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un piéton surgissait entre les véhicules stationnés ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Comment réagis-tu ?",
+        "options": [
+          {
+            "value": "maintain",
+            "label": "Je garde ma vitesse",
+            "correct": false,
+            "response": "Mauvaise réponse. Le piéton peut être difficile à voir à cause des véhicules stationnés."
+          },
+          {
+            "value": "brake",
+            "label": "Je ralentis fortement et je me prépare à m'arrêter",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois anticiper le danger et être capable de t'arrêter immédiatement."
+          },
+          {
+            "value": "swerve",
+            "label": "Je me déporte brusquement sur l'autre voie",
+            "correct": false,
+            "response": "Mauvaise réponse. Un écart brusque sans contrôle peut créer un autre danger."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les piétons",
+    "notion": "Observer les abords d'un passage piéton",
+    "title": "Un passage piéton en agglomération",
+    "category": "Piétons",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_04_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_04_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu suis un véhicule en ville et un passage piéton est signalé devant toi."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... des piétons apparaissaient à proximité du passage piéton ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Que dois-tu faire ?",
+        "options": [
+          {
+            "value": "follow",
+            "label": "Je garde exactement la même allure que le véhicule devant",
+            "correct": false,
+            "response": "Mauvaise réponse. Tu dois analyser toi-même la présence des piétons et adapter ton allure."
+          },
+          {
+            "value": "slow",
+            "label": "Je ralentis et je me prépare à m'arrêter",
+            "correct": true,
+            "response": "Bonne réponse. La présence de piétons près du passage impose de réduire ton allure et d'anticiper leur traversée."
+          },
+          {
+            "value": "overtake",
+            "label": "Je dépasse le véhicule devant",
+            "correct": false,
+            "response": "Mauvaise réponse. Dépasser à proximité d'un passage piéton serait dangereux."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les usagers vulnérables",
+    "notion": "Anticiper à proximité d'une zone fréquentée",
+    "title": "Une rue avec un passage piéton",
+    "category": "Piétons",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_05_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_05_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules derrière une voiture à l'approche d'un passage piéton."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un piéton traversait brusquement devant toi ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Quelle réaction est adaptée ?",
+        "options": [
+          {
+            "value": "same_speed",
+            "label": "Je conserve ma vitesse",
+            "correct": false,
+            "response": "Mauvaise réponse. Tu dois réagir immédiatement à la présence du piéton."
+          },
+          {
+            "value": "brake",
+            "label": "Je ralentis et je m'arrête si nécessaire",
+            "correct": true,
+            "response": "Bonne réponse. Il faut protéger le piéton et être prêt à t'arrêter."
+          },
+          {
+            "value": "horn",
+            "label": "Je klaxonne et je continue",
+            "correct": false,
+            "response": "Mauvaise réponse. Le klaxon ne permet pas de remplacer un ralentissement ou un arrêt."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les intersections",
+    "notion": "Respecter un STOP et observer les autres usagers",
+    "title": "Une intersection avec STOP",
+    "category": "Intersection",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_06_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_06_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu arrives à une intersection signalée par un STOP."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un véhicule arrivait sur la route prioritaire pendant que tu approches du STOP ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Que fais-tu ?",
+        "options": [
+          {
+            "value": "go",
+            "label": "Je passe rapidement avant le véhicule",
+            "correct": false,
+            "response": "Mauvaise réponse. Le STOP impose un arrêt complet et tu dois céder le passage aux véhicules prioritaires."
+          },
+          {
+            "value": "stop_wait",
+            "label": "Je m'arrête complètement et j'attends",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois marquer l'arrêt au STOP puis t'engager uniquement lorsque la voie est libre."
+          },
+          {
+            "value": "slow_only",
+            "label": "Je ralentis simplement sans m'arrêter",
+            "correct": false,
+            "response": "Mauvaise réponse. Un STOP impose obligatoirement un arrêt complet."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les passages à niveau",
+    "notion": "Réagir à la fermeture d'un passage à niveau",
+    "title": "Un passage à niveau",
+    "category": "Passage à niveau",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_07_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_07_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu approches d'un passage à niveau. Les barrières sont encore relevées."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... les barrières s'abaissaient et le feu rouge se mettait à clignoter ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Que dois-tu faire ?",
+        "options": [
+          {
+            "value": "cross",
+            "label": "Je passe rapidement avant la fermeture complète",
+            "correct": false,
+            "response": "Mauvaise réponse. Il ne faut jamais tenter de franchir un passage à niveau lorsque la fermeture est engagée."
+          },
+          {
+            "value": "stop",
+            "label": "Je m'arrête avant le passage à niveau",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois t'arrêter et attendre la réouverture complète du passage à niveau."
+          },
+          {
+            "value": "follow",
+            "label": "Je suis simplement le véhicule devant moi",
+            "correct": false,
+            "response": "Mauvaise réponse. Tu dois toi-même respecter la signalisation et t'assurer de pouvoir t'arrêter."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les travaux",
+    "notion": "Adapter sa conduite à une zone de chantier",
+    "title": "Une route à l'approche de travaux",
+    "category": "Travaux",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_08_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_08_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules sur une route où des panneaux annoncent une zone de travaux."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un chantier et des engins apparaissaient maintenant sur la chaussée ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Quelle conduite adoptes-tu ?",
+        "options": [
+          {
+            "value": "maintain",
+            "label": "Je conserve ma vitesse",
+            "correct": false,
+            "response": "Mauvaise réponse. La zone de travaux peut réduire la largeur de la chaussée et créer des dangers imprévus."
+          },
+          {
+            "value": "slow",
+            "label": "Je ralentis et je reste très vigilant",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois réduire ton allure et anticiper la présence d'ouvriers, d'engins ou d'une circulation alternée."
+          },
+          {
+            "value": "overtake",
+            "label": "Je dépasse les véhicules devant moi",
+            "correct": false,
+            "response": "Mauvaise réponse. Un dépassement dans une zone de travaux peut être particulièrement dangereux."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "Les véhicules prioritaires",
+    "notion": "Faciliter le passage d'un véhicule de secours",
+    "title": "Un véhicule arrive en sens inverse",
+    "category": "Véhicules prioritaires",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_09_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_09_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules sur une route à double sens. Un poids lourd arrive en face."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... le véhicule arrivant en face était une ambulance en intervention ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Comment réagis-tu ?",
+        "options": [
+          {
+            "value": "maintain",
+            "label": "Je garde exactement ma trajectoire et ma vitesse",
+            "correct": false,
+            "response": "Mauvaise réponse. Tu dois faciliter le passage du véhicule prioritaire dès que cela est possible en sécurité."
+          },
+          {
+            "value": "facilitate",
+            "label": "Je ralentis et je facilite son passage",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois permettre au véhicule de secours de circuler sans créer de danger supplémentaire."
+          },
+          {
+            "value": "stop_middle",
+            "label": "Je m'arrête immédiatement au milieu de ma voie",
+            "correct": false,
+            "response": "Mauvaise réponse. Un arrêt brutal ou mal placé peut gêner davantage le véhicule de secours."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "course_title": "La conduite sur autoroute",
+    "notion": "Réagir à un danger soudain sur autoroute",
+    "title": "Un incident devant toi sur l'autoroute",
+    "category": "Autoroute",
+
+    "visual": {
+      "initial": {
+        "image": "assets/scenes/situation_10_initial.png"
+      },
+      "change": {
+        "image": "assets/scenes/situation_10_etsi.png"
+      }
+    },
+
+    "scenes": [
+      {
+        "type": "narration",
+        "visual_state": "initial",
+        "text": "Tu circules sur une autoroute à plusieurs voies. Le trafic est fluide."
+      },
+      {
+        "type": "narration",
+        "visual_state": "change",
+        "text": "ET SI... un incident ou un véhicule en difficulté apparaissait soudainement devant toi ?"
+      },
+      {
+        "type": "choice",
+        "visual_state": "change",
+        "text": "Quelle réaction adoptes-tu ?",
+        "options": [
+          {
+            "value": "swerve",
+            "label": "Je change brusquement de voie",
+            "correct": false,
+            "response": "Mauvaise réponse. Un changement de voie brusque sans contrôle peut provoquer une collision."
+          },
+          {
+            "value": "slow_check",
+            "label": "Je ralentis, j'augmente ma distance et je contrôle autour de moi",
+            "correct": true,
+            "response": "Bonne réponse. Tu dois réduire ton allure, conserver une marge de sécurité et vérifier avant toute manœuvre."
+          },
+          {
+            "value": "accelerate",
+            "label": "J'accélère pour dépasser rapidement la zone",
+            "correct": false,
+            "response": "Mauvaise réponse. Face à un danger sur autoroute, accélérer réduirait ton temps de réaction."
+          }
+        ]
+      }
+    ]
+  }
+]
