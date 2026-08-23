@@ -2653,7 +2653,7 @@ function openExitModal() {
     if (leave) {
 
       window.location.href =
-        "index.html";
+        "https://et-si-code-one.vercel.app/";
 
     }
 
@@ -2763,7 +2763,7 @@ function confirmExit() {
    */
 
   window.location.href =
-    "index.html";
+    "https://et-si-code-one.vercel.app/";
 
 }
 
