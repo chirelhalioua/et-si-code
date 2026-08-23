@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="fr" data-theme="dark">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,171 +11,230 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>ET SI ? — Entraînement conduite</title>
+  <meta
+    name="description"
+    content="ET SI ? — Situation interactive du Code de la route."
+  >
+
+  <title>ET SI ? — Situation interactive</title>
 
 
-  <!-- Applique le thème enregistré avant l'affichage -->
+  <!-- =====================================================
+       THÈME AVANT CHARGEMENT
+       Évite le flash clair/sombre
+  ====================================================== -->
+
   <script>
     (function () {
+
       try {
-        const savedTheme = localStorage.getItem("etsi-theme");
+
+        const savedTheme =
+          localStorage.getItem(
+            "etsi-theme"
+          );
+
         const systemLight =
           window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: light)").matches;
+          window.matchMedia(
+            "(prefers-color-scheme: light)"
+          ).matches;
 
         const theme =
-          savedTheme === "light" || savedTheme === "dark"
-            ? savedTheme
-            : (systemLight ? "light" : "dark");
+          savedTheme === "light" ||
+          savedTheme === "dark"
 
-        document.documentElement.setAttribute("data-theme", theme);
-      } catch (error) {
-        document.documentElement.setAttribute("data-theme", "dark");
+            ? savedTheme
+
+            : (
+                systemLight
+                  ? "light"
+                  : "dark"
+              );
+
+        document
+          .documentElement
+          .setAttribute(
+            "data-theme",
+            theme
+          );
+
       }
+
+      catch (error) {
+
+        document
+          .documentElement
+          .setAttribute(
+            "data-theme",
+            "dark"
+          );
+
+      }
+
     })();
   </script>
+
+
+  <!-- =====================================================
+       POLICE
+  ====================================================== -->
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <!-- =====================================================
+       CSS
+  ====================================================== -->
 
   <link
     rel="stylesheet"
     href="style.css"
   >
+
+
+  <!-- =====================================================
+       JS
+  ====================================================== -->
+
+  <script
+    src="config.js"
+    defer
+  ></script>
+
+  <script
+    src="script.js"
+    defer
+  ></script>
+
 </head>
 
-<div
-  class="resume-modal"
-  id="resume-modal"
-  aria-hidden="true"
->
-  <div class="resume-backdrop"></div>
-
-  <div
-    class="resume-panel"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="resume-title"
-  >
-    <div class="resume-kicker">
-      Partie en cours
-    </div>
-
-    <h2 id="resume-title">
-      Bon retour,
-      <span id="resume-player-name">Conducteur</span>
-    </h2>
-
-    <p class="resume-text">
-      Tu as une situation en cours.
-    </p>
-
-    <div class="resume-card">
-
-      <span class="resume-label">
-        Situation
-      </span>
-
-      <strong id="resume-scenario-title">
-        Situation en cours
-      </strong>
-
-      <div class="resume-progress">
-        Étape
-        <span id="resume-step">1</span>
-        sur
-        <span id="resume-total">3</span>
-      </div>
-
-    </div>
-
-    <div class="resume-actions">
-
-      <button
-        id="resume-new"
-        class="resume-secondary"
-        type="button"
-      >
-        Nouvelle situation
-      </button>
-
-      <button
-        id="resume-continue"
-        class="resume-primary"
-        type="button"
-      >
-        Reprendre
-        <span>→</span>
-      </button>
-
-    </div>
-
-  </div>
-</div>
 
 <body>
 
-  <main class="app-shell">
+
+  <main class="game-page">
 
 
     <!-- =====================================================
-         BARRE SUPÉRIEURE
+         ENTÊTE
     ====================================================== -->
 
-    <header class="topbar">
-
-      <div class="brand">
-
-        <div class="brand-mark">
-          ES
-        </div>
-
-        <div class="brand-copy">
-
-          <div class="brand-title">
-            ET SI ?
-          </div>
+    <header class="game-header">
 
 
+      <!-- LOGO -->
 
-          <div class="brand-subtitle">
-            Entraînement à la conduite
-          </div>
+      <a
+        class="game-brand"
+        href="index.html"
+        aria-label="Accueil ET SI ?"
+      >
+
+        <span class="game-logo-text">
+          ET SI
+        </span>
+
+        <span class="game-logo-question">
+          ?
+        </span>
+
+      </a>
+
+
+      <!-- PROGRESSION -->
+
+      <div
+        class="game-progress"
+        aria-label="Progression de la situation"
+      >
+
+        <strong id="game-step-label">
+          Étape 1 sur 3
+        </strong>
+
+        <div class="progress-bar">
+
+          <span class="progress-step active"></span>
+
+          <span class="progress-step"></span>
+
+          <span class="progress-step"></span>
 
         </div>
 
       </div>
 
-      <a
-        href="index.html"
-        id="exit-game"
-        class="exit-game"
-        aria-label="Quitter le jeu"
-        title="Retour à l'accueil"
-      >
-        ← Accueil
-      </a>
-      <div class="topbar-meta">
+
+      <!-- ACTIONS -->
+
+      <div class="header-actions">
+
+
+        <!-- THÈME / CATÉGORIE DE LA SITUATION -->
+
+        <div
+          class="category-chip"
+          id="category-chip"
+          title="Thème de la situation"
+        >
+          Situation interactive
+        </div>
+
+
+        <!-- CLAIR / SOMBRE -->
 
         <button
           id="theme-toggle"
           class="theme-toggle"
           type="button"
-          aria-label="Passer au mode clair"
-          title="Changer le thème"
+          aria-label="Changer le thème"
+          title="Mode clair / sombre"
         >
-          <span class="theme-sun" aria-hidden="true">☀</span>
-          <span class="theme-moon" aria-hidden="true">☾</span>
+
+          <span
+            class="theme-sun"
+            aria-hidden="true"
+          >
+            ☀
+          </span>
+
+          <span
+            class="theme-moon"
+            aria-hidden="true"
+          >
+            ☾
+          </span>
+
         </button>
 
-        <div class="lesson-chip">
-          Situation interactive
-        </div>
 
-        <div class="step-indicator">
+        <!-- QUITTER -->
 
-          <span class="step-dot active"></span>
-          <span class="step-dot"></span>
-          <span class="step-dot"></span>
+        <button
+          id="exit-game"
+          class="exit-game"
+          type="button"
+          aria-label="Quitter le jeu"
+          title="Quitter le jeu"
+        >
+          ✕
+        </button>
 
-        </div>
 
       </div>
 
@@ -182,673 +243,64 @@
 
 
     <!-- =====================================================
-         EXPÉRIENCE
+         SCÈNE DE JEU
     ====================================================== -->
 
-    <section class="experience">
+    <section class="game-card">
 
 
       <!-- ===================================================
-           SCÈNE
+           IMAGE
       ==================================================== -->
 
-      <div
-        class="scene"
-        id="scene"
-      >
+      <div class="simulation-panel">
+
+        <div class="simulation-image-wrapper">
 
 
-        <!-- ===============================================
-             IMMEUBLES
-        ================================================ -->
-
-        <div class="cityscape">
-
-          <div class="building b1"></div>
-          <div class="building b2"></div>
-          <div class="building b3"></div>
-          <div class="building b4"></div>
-          <div class="building b5"></div>
-
-        </div>
+          <img
+            id="scene-image"
+            class="scene-image"
+            src="assets/scenes/situation_01_initial.png"
+            alt="Situation de conduite"
+          >
 
 
-
-        <!-- ===============================================
-             ROUTE
-        ================================================ -->
-
-        <div class="road"></div>
+          <div
+            class="image-shade"
+            aria-hidden="true"
+          ></div>
 
 
+          <!-- AVATAR -->
 
-        <!-- ===============================================
-             VOITURE PRINCIPALE
-        ================================================ -->
-
-        <div
-          class="car"
-          id="car"
-        >
-
-          <svg
-            viewBox="0 0 220 100"
-            width="100%"
-            height="100%"
+          <div
+            class="driver-avatar"
             aria-hidden="true"
           >
 
-            <!-- carrosserie -->
 
-            <path
-              d="
-                M28 60
-                L48 34
-                Q55 25 70 25
-                H145
-                Q158 25 168 36
-                L185 56
-                H198
-                Q208 56 208 66
-                V75
-                H12
-                V68
-                Q12 60 28 60
-                Z
-              "
-              fill="#ef4b3f"
-            />
+            <div
+              id="game-avatar-girl"
+              class="avatar-emoji"
+              data-player-avatar="girl"
+            >
+              👩🏻
+            </div>
+
+
+            <div
+              id="game-avatar-boy"
+              class="avatar-emoji"
+              data-player-avatar="boy"
+            >
+              👨🏻
+            </div>
 
-
-            <!-- vitre avant -->
-
-            <path
-              d="
-                M65 31
-                H103
-                V55
-                H44
-                Z
-              "
-              fill="#a9ddf4"
-            />
-
-
-            <!-- vitre arrière -->
-
-            <path
-              d="
-                M110 31
-                H143
-                Q151 31 158 40
-                L170 55
-                H110
-                Z
-              "
-              fill="#a9ddf4"
-            />
-
-
-            <!-- séparation vitres -->
-
-            <rect
-              x="104"
-              y="30"
-              width="5"
-              height="27"
-              fill="#ef4b3f"
-            />
-
-
-            <!-- roues -->
-
-            <circle
-              cx="58"
-              cy="76"
-              r="17"
-              fill="#202a35"
-            />
-
-            <circle
-              cx="58"
-              cy="76"
-              r="8"
-              fill="#aebbc3"
-            />
-
-            <circle
-              cx="165"
-              cy="76"
-              r="17"
-              fill="#202a35"
-            />
-
-            <circle
-              cx="165"
-              cy="76"
-              r="8"
-              fill="#aebbc3"
-            />
-
-
-            <!-- phare -->
-
-            <rect
-              x="199"
-              y="61"
-              width="10"
-              height="8"
-              rx="2"
-              fill="#ffd42a"
-            />
-
-          </svg>
-
-        </div>
-
-
-
-        <!-- ===============================================
-             PLUIE / NEIGE
-        ================================================ -->
-
-        <div class="rain"></div>
-
-
-
-        <!-- ===============================================
-             AVATAR DU JOUEUR
-             Le prénom et le genre viennent de la landing page
-        ================================================ -->
-
-        <div class="avatar-container">
-
-          <div class="avatar-ring">
-
-              <svg
-  id="avatar"
-  class="avatar"
-  viewBox="0 0 140 150"
-  width="140"
-  height="150"
-  aria-label="Avatar du joueur"
->
-
-  <!-- =====================================================
-       ÉPAULES
-  ====================================================== -->
-
-  <path
-    d="
-      M18 150
-      Q28 126 50 118
-      Q60 114 70 114
-      Q80 114 90 118
-      Q112 126 122 150
-      Z
-    "
-    fill="#222831"
-  />
-
-
-  <!-- =====================================================
-       HAUT TURQUOISE
-  ====================================================== -->
-
-  <path
-    d="
-      M48 124
-      Q70 133 92 124
-      L98 150
-      H42
-      Z
-    "
-    fill="#20b9b1"
-  />
-
-
-  <!-- =====================================================
-       CHEVEUX ARRIÈRE GAUCHE
-  ====================================================== -->
-
-  <path
-    d="
-      M69 18
-
-      Q53 17 43 29
-      Q34 41 35 65
-
-      Q33 79 37 92
-
-      Q32 101 36 110
-      Q40 119 48 118
-
-      Q42 125 47 132
-      Q52 139 60 134
-
-      Q64 130 63 122
-
-      Q59 112 60 101
-      Q60 93 61 87
-
-      Q52 83 48 74
-      Q43 64 44 54
-
-      Q45 36 57 27
-      Q63 22 69 18
-
-      Z
-    "
-    fill="#49342c"
-  />
-
-
-  <!-- =====================================================
-       CHEVEUX ARRIÈRE DROIT
-  ====================================================== -->
-
-  <path
-    d="
-      M71 18
-
-      Q87 17 97 29
-      Q106 41 105 65
-
-      Q107 79 103 92
-
-      Q108 101 104 110
-      Q100 119 92 118
-
-      Q98 125 93 132
-      Q88 139 80 134
-
-      Q76 130 77 122
-
-      Q81 112 80 101
-      Q80 93 79 87
-
-      Q88 83 92 74
-      Q97 64 96 54
-
-      Q95 36 83 27
-      Q77 22 71 18
-
-      Z
-    "
-    fill="#49342c"
-  />
-
-
-  <!-- =====================================================
-       BOUCLES GAUCHES
-  ====================================================== -->
-
-  <path
-  d="
-    M42 91
-    Q34 99 38 108
-    Q42 116 49 112
-
-    Q44 120 49 127
-    Q54 132 60 126
-  "
-  fill="none"
-  stroke="#49342c"
-  stroke-width="8"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-/>
-
-<path
-  d="
-    M44 100
-    Q40 107 44 113
-    Q48 119 53 115
-  "
-  fill="none"
-  stroke="#60463a"
-  stroke-width="2.3"
-  stroke-linecap="round"
-/>
-
-
-  <!-- =====================================================
-       BOUCLES DROITES
-  ====================================================== -->
-  
-<path
-  d="
-    M98 92
-    Q105 98 102 106
-    Q99 114 91 111
-
-    Q96 119 91 125
-    Q86 131 81 126
-  "
-  fill="none"
-  stroke="#49342c"
-  stroke-width="8"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-/>
-
-<path
-  d="
-    M95 100
-    Q99 106 96 112
-    Q92 118 87 114
-  "
-  fill="none"
-  stroke="#60463a"
-  stroke-width="2.3"
-  stroke-linecap="round"
-/>
-
-
-  <!-- =====================================================
-       COU
-       DESSINÉ APRÈS LES CHEVEUX ARRIÈRE
-       POUR RESTER BIEN VISIBLE
-  ====================================================== -->
-
-  <path
-  d="
-    M62 96
-    L62 117
-
-    Q62 123 66 126
-    Q70 128 74 126
-    Q78 123 78 117
-
-    L78 96
-
-    Z
-  "
-  fill="#efbd98"
-/>
-  
-
-
-  <!-- petite ombre du cou -->
-  <path
-    d="
-      M61 100
-      Q70 108 79 100
-      L79 107
-      Q70 113 61 107
-      Z
-    "
-    fill="#dda987"
-    opacity="0.35"
-  />
-
-  
-
-  <!-- =====================================================
-       VISAGE
-  ====================================================== -->
-
-  <path
-    d="
-      M43 60
-
-      Q43 39 56 31
-      Q63 27 70 27
-      Q77 27 84 31
-      Q97 39 97 60
-
-      L96 75
-
-      Q94 91 84 101
-      Q78 107 70 108
-      Q62 107 56 101
-      Q46 91 44 75
-
-      Z
-    "
-    fill="#f2c7a5"
-  />
-
-
-  <!-- =====================================================
-       CHEVEUX AVANT
-       RAIE LATÉRALE
-  ====================================================== -->
-
-  <path
-    d="
-      M41 60
-
-      Q40 38 52 28
-      Q61 19 72 19
-      Q86 19 96 31
-      Q101 38 102 48
-
-      Q94 43 87 40
-      Q79 37 72 35
-
-      Q65 43 58 49
-      Q50 55 41 60
-
-      Z
-    "
-    fill="#49342c"
-  />
-
-
-  <!-- =====================================================
-       MÈCHE AVANT
-  ====================================================== -->
-
-  <path
-    d="
-      M72 35
-      Q65 44 57 51
-      Q50 57 45 61
-    "
-    fill="none"
-    stroke="#64493d"
-    stroke-width="3"
-    stroke-linecap="round"
-  />
-
-
-  <!-- =====================================================
-       REFLET CHEVEUX
-  ====================================================== -->
-
-  <path
-    d="
-      M53 31
-      Q61 24 69 22
-    "
-    fill="none"
-    stroke="#745548"
-    stroke-width="2"
-    stroke-linecap="round"
-    opacity="0.55"
-  />
-
-
-  <!-- =====================================================
-       SOURCILS
-  ====================================================== -->
-
-  <path
-    d="M50 59 Q57 54 64 58"
-    fill="none"
-    stroke="#352821"
-    stroke-width="2.5"
-    stroke-linecap="round"
-  />
-
-  <path
-    d="M76 58 Q83 54 90 59"
-    fill="none"
-    stroke="#352821"
-    stroke-width="2.5"
-    stroke-linecap="round"
-  />
-
-
-  <!-- =====================================================
-       YEUX NORMAUX
-  ====================================================== -->
-
-  <g id="eyes-normal">
-
-    <ellipse
-      cx="57"
-      cy="67"
-      rx="4.4"
-      ry="5.4"
-      fill="#28313a"
-    />
-
-    <ellipse
-      cx="83"
-      cy="67"
-      rx="4.4"
-      ry="5.4"
-      fill="#28313a"
-    />
-
-    <circle
-      cx="58.3"
-      cy="65.6"
-      r="1.3"
-      fill="#ffffff"
-    />
-
-    <circle
-      cx="84.3"
-      cy="65.6"
-      r="1.3"
-      fill="#ffffff"
-    />
-
-  </g>
-
-
-  <!-- =====================================================
-       YEUX SURPRIS
-  ====================================================== -->
-
-  <g
-    id="eyes-surprised"
-    style="display:none"
-  >
-
-    <circle
-      cx="57"
-      cy="67"
-      r="6"
-      fill="#ffffff"
-    />
-
-    <circle
-      cx="83"
-      cy="67"
-      r="6"
-      fill="#ffffff"
-    />
-
-    <circle
-      cx="57"
-      cy="67"
-      r="3"
-      fill="#28313a"
-    />
-
-    <circle
-      cx="83"
-      cy="67"
-      r="3"
-      fill="#28313a"
-    />
-
-  </g>
-
-
-  <!-- =====================================================
-       NEZ
-  ====================================================== -->
-
-  <path
-    d="
-      M70 70
-      Q69 76 68 80
-    "
-    fill="none"
-    stroke="#d5a17f"
-    stroke-width="1.7"
-    stroke-linecap="round"
-  />
-
-
-  <!-- =====================================================
-       BOUCHE NORMALE
-  ====================================================== -->
-
-  <path
-    id="mouth-normal"
-    d="
-      M63 89
-      Q70 93 77 89
-    "
-    fill="none"
-    stroke="#b95f65"
-    stroke-width="2"
-    stroke-linecap="round"
-  />
-
-
-  <!-- =====================================================
-       BOUCHE SURPRISE
-  ====================================================== -->
-
-  <ellipse
-    id="mouth-surprised"
-    cx="70"
-    cy="90"
-    rx="3.5"
-    ry="4.5"
-    fill="#b95f65"
-    style="display:none"
-  />
-
-
-  <!-- =====================================================
-       BOUCHE HEUREUSE
-  ====================================================== -->
-
-  <path
-    id="mouth-happy"
-    d="
-      M61 87
-      Q70 96 79 87
-    "
-    fill="none"
-    stroke="#b95f65"
-    stroke-width="2.2"
-    stroke-linecap="round"
-    style="display:none"
-  />
-
-</svg>
 
           </div>
 
-        </div>
 
-
-
-        <!-- ===============================================
-             LABEL SIMULATION
-        ================================================ -->
-
-        <div class="scene-label">
-          Simulation
         </div>
 
       </div>
@@ -856,74 +308,89 @@
 
 
       <!-- ===================================================
-           ZONE DE DÉCISION
+           QUESTION / CHOIX
       ==================================================== -->
 
-      <section class="dialogue">
+      <section class="quiz-panel">
 
 
-        <!-- ===============================================
-             EN-TÊTE DIALOGUE
-        ================================================ -->
+        <!-- HAUT QUESTION -->
 
-        <div class="dialogue-header">
+        <div class="quiz-top">
 
 
-          <div class="speaker">
-
-            <span class="speaker-kicker">
-              Au volant
-            </span>
+          <div class="player-block">
 
             <span
-              class="name"
-              id="player-name-display"
-            >
-              Conducteur
-            </span>
+              class="player-dot"
+              aria-hidden="true"
+            ></span>
+
+
+            <div>
+
+              <span class="player-label">
+                AU VOLANT
+              </span>
+
+              <strong
+                class="player-name"
+                id="player-name-display"
+                data-player-name
+              >
+                Conducteur
+              </strong>
+
+            </div>
 
           </div>
 
 
 
-          <!-- =============================================
-               AUDIO
-          ============================================== -->
+          <!-- AUDIO -->
 
           <button
-            class="audio-btn"
+            class="audio-button audio-btn"
             type="button"
-            aria-label="Activer ou désactiver l'audio"
+            aria-pressed="true"
           >
 
-            <span class="audio-icon">
-              ◉
+            <span
+              class="audio-icon"
+              aria-hidden="true"
+            >
+              ●
             </span>
 
             Audio
 
           </button>
 
+
         </div>
 
 
 
-        <!-- ===============================================
-             CONTENU
-        ================================================ -->
-
-        <div class="dialogue-content">
+        <div class="quiz-divider"></div>
 
 
-          <!-- texte injecté par script.js -->
 
-          <p id="text">
+        <!-- CONTENU -->
+
+        <div class="quiz-content">
+
+
+          <p
+            id="text"
+            class="question-text"
+            aria-live="polite"
+          >
             Chargement de la situation...
           </p>
 
 
 
-          <!-- réponses injectées par script.js -->
+          <!-- RÉPONSES -->
 
           <div
             id="choices"
@@ -932,21 +399,30 @@
 
 
 
-          <!-- bouton suivant -->
+          <!-- BOUTON PRINCIPAL -->
 
-          <div class="dialogue-actions">
+          <button
+            id="next"
+            class="main-action"
+            type="button"
+          >
 
-            <button
-              id="next"
-              type="button"
-            >
+            <span class="main-action-label">
               Continuer
-            </button>
+            </span>
 
-          </div>
+            <span
+              class="main-action-arrow"
+              aria-hidden="true"
+            >
+              →
+            </span>
+
+          </button>
 
 
         </div>
+
 
       </section>
 
@@ -956,30 +432,101 @@
 
 
     <!-- =====================================================
-         PIED DE PAGE
+         FOOTER
     ====================================================== -->
 
-    <footer class="app-footer">
+    <footer class="game-footer">
 
-      <span>
-        Observe
-      </span>
 
-      <span class="footer-separator">
-        •
-      </span>
+      <!-- ===================================================
+           LIGNE 1 — BONNE ROUTE
+      ==================================================== -->
 
-      <span>
-        Anticipe
-      </span>
+      <div class="game-footer-top">
 
-      <span class="footer-separator">
-        •
-      </span>
+        <div class="footer-road-row">
 
-      <span>
-        Décide
-      </span>
+
+          <div
+            class="footer-road-graphic"
+            aria-hidden="true"
+          ></div>
+
+
+          <div class="footer-road-text">
+
+            <strong>
+              Bonne route
+            </strong>
+
+            <span aria-hidden="true">
+              💛
+            </span>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ===================================================
+           LIGNE 2 — LOGO / SLOGAN / CRÉDIT
+      ==================================================== -->
+
+      <div class="game-footer-bottom">
+
+
+        <!-- LOGO -->
+
+        <a
+          class="game-footer-brand"
+          href="index.html"
+          aria-label="Retour à l'accueil ET SI ?"
+        >
+
+          <span class="game-footer-logo-text">
+            ET SI
+          </span>
+
+          <span class="game-footer-logo-badge">
+            ?
+          </span>
+
+        </a>
+
+
+
+        <!-- SLOGAN -->
+
+        <div class="game-footer-slogan">
+          Observe · Anticipe · Décide
+        </div>
+
+
+
+        <!-- CRÉDIT -->
+
+        <div class="footer-credit">
+
+          Développé avec 💛 par
+
+          <a
+            href="https://chirelhalioua.fr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-credit-link"
+          >
+            Chirel
+          </a>
+
+        </div>
+
+
+      </div>
+
 
     </footer>
 
@@ -989,11 +536,223 @@
 
 
   <!-- =====================================================
-       JAVASCRIPT
+       MODALE — REPRENDRE UNE SITUATION
   ====================================================== -->
 
-  <script src="script.js"></script>
-  <script src="config.js"></script>
+  <div
+    class="resume-modal"
+    id="resume-modal"
+    aria-hidden="true"
+  >
+
+
+    <!-- FOND -->
+
+    <div
+      class="resume-backdrop"
+      aria-hidden="true"
+    ></div>
+
+
+
+    <!-- CARTE -->
+
+    <section
+      class="resume-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="resume-title"
+    >
+
+
+      <!-- ICÔNE -->
+
+      <div
+        class="resume-icon"
+        aria-hidden="true"
+      >
+        ↻
+      </div>
+
+
+
+      <!-- TITRE -->
+
+      <p class="resume-eyebrow">
+        Bon retour
+      </p>
+
+
+      <h2 id="resume-title">
+
+        <span id="resume-player-name">
+          Conducteur
+        </span>,
+        tu as une situation en cours.
+
+      </h2>
+
+
+
+      <!-- INFOS SITUATION -->
+
+      <div class="resume-info">
+
+
+        <strong
+          id="resume-scenario-title"
+          class="resume-scenario-title"
+        >
+          Situation en cours
+        </strong>
+
+
+        <span class="resume-progress-text">
+
+          Étape
+
+          <strong id="resume-step">
+            1
+          </strong>
+
+          sur
+
+          <strong id="resume-total">
+            3
+          </strong>
+
+        </span>
+
+
+      </div>
+
+
+
+      <!-- BOUTONS -->
+
+      <div class="resume-actions">
+
+
+        <button
+          id="resume-new"
+          class="resume-new"
+          type="button"
+        >
+          Nouvelle situation
+        </button>
+
+
+        <button
+          id="resume-continue"
+          class="resume-continue"
+          type="button"
+        >
+
+          <span>
+            Reprendre
+          </span>
+
+          <span aria-hidden="true">
+            →
+          </span>
+
+        </button>
+
+
+      </div>
+
+
+    </section>
+
+
+  </div>
+
+
+
+  <!-- =====================================================
+       MODALE — QUITTER LE JEU
+  ====================================================== -->
+
+  <div
+    class="exit-confirm-modal"
+    id="exit-confirm-modal"
+    aria-hidden="true"
+  >
+
+
+    <!-- FOND -->
+
+    <div
+      class="exit-confirm-backdrop"
+      data-exit-close
+    ></div>
+
+
+
+    <!-- CARTE -->
+
+    <section
+      class="exit-confirm-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="exit-confirm-title"
+    >
+
+
+      <div
+        class="exit-confirm-icon"
+        aria-hidden="true"
+      >
+        ?
+      </div>
+
+
+
+      <h2 id="exit-confirm-title">
+        Quitter le jeu ?
+      </h2>
+
+
+
+      <p>
+
+        Ta progression en cours sera sauvegardée.
+
+        Veux-tu vraiment revenir à l'accueil ?
+
+      </p>
+
+
+
+      <div class="exit-confirm-actions">
+
+
+        <button
+          class="exit-no"
+          id="exit-no"
+          type="button"
+        >
+          Non, continuer
+        </button>
+
+
+        <button
+          class="exit-yes"
+          id="exit-yes"
+          type="button"
+        >
+          Oui, quitter
+        </button>
+
+
+      </div>
+
+
+    </section>
+
+
+  </div>
+
 
 </body>
 

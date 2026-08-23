@@ -1,468 +1,611 @@
-// =============================================================================
-// ET SI ?
-// LANDING PAGE
-// =============================================================================
+// =============================================================
+// ET SI ? — LANDING.JS
+// Page d'accueil
+// =============================================================
 
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+// =============================================================
+// STOCKAGE LOCAL
+// =============================================================
+
+const STORAGE_KEYS = {
+  playerName: "etsi-player-name",
+  avatar: "etsi-avatar",
+  theme: "etsi-theme"
+};
 
 
-    // =========================================================================
-    // THEME
-    // =========================================================================
+// =============================================================
+// ÉLÉMENTS HTML
+// =============================================================
 
-    const themeToggle =
-      document.getElementById(
-        "theme-toggle"
-      );
+const themeButton =
+  document.getElementById("theme-toggle");
 
+const profileModal =
+  document.getElementById("profile-modal");
 
-    function getSavedTheme() {
+const profileCloseButton =
+  document.getElementById("profile-close");
 
-      try {
+const playerNameInput =
+  document.getElementById("player-name");
 
-        const savedTheme =
-          localStorage.getItem(
-            "etsi-theme"
-          );
+const profileStartButton =
+  document.getElementById("profile-start");
 
+const profileError =
+  document.getElementById("profile-error");
 
-        if (
-          savedTheme === "light" ||
-          savedTheme === "dark"
-        ) {
+const playButtons =
+  document.querySelectorAll(".js-play");
 
-          return savedTheme;
+const avatarButtons =
+  document.querySelectorAll(".avatar-option");
 
-        }
-
-      }
-
-      catch (error) {
-
-        console.warn(
-          "Impossible de lire le thème.",
-          error
-        );
-
-      }
+const profileAvatarButtons =
+  document.querySelectorAll(".profile-avatar");
 
 
-      if (
-        window.matchMedia &&
-        window.matchMedia(
-          "(prefers-color-scheme: light)"
-        ).matches
-      ) {
+// =============================================================
+// AVATAR SÉLECTIONNÉ
+// =============================================================
 
-        return "light";
-
-      }
+let selectedAvatar =
+  localStorage.getItem(STORAGE_KEYS.avatar) === "boy"
+    ? "boy"
+    : "girl";
 
 
-      return "dark";
+// =============================================================
+// THÈME
+// =============================================================
 
-    }
+function getCurrentTheme() {
 
-
-
-    function applyTheme(
-      theme
-    ) {
-
-      const safeTheme =
-        theme === "light"
-          ? "light"
-          : "dark";
-
-
-      document.documentElement.setAttribute(
-        "data-theme",
-        safeTheme
-      );
-
-
-      try {
-
-        localStorage.setItem(
-          "etsi-theme",
-          safeTheme
-        );
-
-      }
-
-      catch (error) {
-
-        console.warn(
-          "Impossible d'enregistrer le thème.",
-          error
-        );
-
-      }
-
-    }
-
-
-
-    applyTheme(
-      getSavedTheme()
+  const savedTheme =
+    localStorage.getItem(
+      STORAGE_KEYS.theme
     );
 
 
+  if (
+    savedTheme === "light" ||
+    savedTheme === "dark"
+  ) {
 
-    if (themeToggle) {
+    return savedTheme;
 
-      themeToggle.addEventListener(
-        "click",
-        () => {
-
-          const current =
-            document.documentElement.getAttribute(
-              "data-theme"
-            );
+  }
 
 
-          applyTheme(
-            current === "dark"
-              ? "light"
-              : "dark"
-          );
+  const prefersLight =
+    window.matchMedia &&
+    window.matchMedia(
+      "(prefers-color-scheme: light)"
+    ).matches;
 
-        }
+
+  return prefersLight
+    ? "light"
+    : "dark";
+}
+
+
+function applyTheme(
+  theme,
+  save = true
+) {
+
+  const safeTheme =
+    theme === "light"
+      ? "light"
+      : "dark";
+
+
+  document.documentElement.setAttribute(
+    "data-theme",
+    safeTheme
+  );
+
+
+  if (save) {
+
+    localStorage.setItem(
+      STORAGE_KEYS.theme,
+      safeTheme
+    );
+
+  }
+
+}
+
+
+function toggleTheme() {
+
+  const currentTheme =
+    document.documentElement.getAttribute(
+      "data-theme"
+    ) || "dark";
+
+
+  const newTheme =
+    currentTheme === "dark"
+      ? "light"
+      : "dark";
+
+
+  applyTheme(newTheme);
+
+}
+
+
+// =============================================================
+// AFFICHAGE DE L'AVATAR
+// =============================================================
+
+function updateAvatarUI() {
+
+  // -----------------------------------------------------------
+  // CARTES DANS LA SECTION "TON CONDUCTEUR"
+  // -----------------------------------------------------------
+
+  avatarButtons.forEach(
+    button => {
+
+      const active =
+        button.dataset.avatar ===
+        selectedAvatar;
+
+
+      button.classList.toggle(
+        "selected",
+        active
+      );
+
+
+      button.setAttribute(
+        "aria-pressed",
+        String(active)
       );
 
     }
+  );
 
 
+  // -----------------------------------------------------------
+  // CARTES DANS LA MODALE
+  // -----------------------------------------------------------
 
-    // =========================================================================
-    // ELEMENTS AVATAR PAGE
-    // =========================================================================
+  profileAvatarButtons.forEach(
+    button => {
 
-    const avatarButtons =
-      document.querySelectorAll(
-        ".avatar-option"
+      const active =
+        button.dataset.profileAvatar ===
+        selectedAvatar;
+
+
+      button.classList.toggle(
+        "selected",
+        active
       );
 
 
-    const previewGirl =
-      document.getElementById(
-        "preview-avatar-girl"
-      );
-
-
-    const previewBoy =
-      document.getElementById(
-        "preview-avatar-boy"
-      );
-
-
-
-    function updatePreviewAvatar(
-      avatar
-    ) {
-
-      if (previewGirl) {
-
-        previewGirl.style.display =
-          avatar === "girl"
-            ? "block"
-            : "none";
-
-      }
-
-
-      if (previewBoy) {
-
-        previewBoy.style.display =
-          avatar === "boy"
-            ? "block"
-            : "none";
-
-      }
-
-
-      avatarButtons.forEach(
-        button => {
-
-          button.classList.toggle(
-            "selected",
-            button.dataset.avatar === avatar
-          );
-
-        }
+      button.setAttribute(
+        "aria-pressed",
+        String(active)
       );
 
     }
+  );
 
 
+  // -----------------------------------------------------------
+  // AVATAR SUR L'IMAGE D'APERÇU
+  // -----------------------------------------------------------
 
-    let pageSelectedAvatar =
-      "girl";
-
-
-    try {
-
-      const savedAvatar =
-        localStorage.getItem(
-          "etsi-avatar"
-        );
-
-
-      if (
-        savedAvatar === "girl" ||
-        savedAvatar === "boy"
-      ) {
-
-        pageSelectedAvatar =
-          savedAvatar;
-
-      }
-
-    }
-
-    catch (error) {
-
-      pageSelectedAvatar =
-        "girl";
-
-    }
-
-
-    updatePreviewAvatar(
-      pageSelectedAvatar
+  const girlAvatar =
+    document.getElementById(
+      "preview-avatar-girl"
     );
 
 
-
-    avatarButtons.forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            pageSelectedAvatar =
-              button.dataset.avatar;
+  const boyAvatar =
+    document.getElementById(
+      "preview-avatar-boy"
+    );
 
 
-            updatePreviewAvatar(
-              pageSelectedAvatar
-            );
+  if (girlAvatar) {
+
+    girlAvatar.style.display =
+      selectedAvatar === "girl"
+        ? "grid"
+        : "none";
+
+  }
 
 
-            try {
+  if (boyAvatar) {
 
-              localStorage.setItem(
-                "etsi-avatar",
-                pageSelectedAvatar
-              );
+    boyAvatar.style.display =
+      selectedAvatar === "boy"
+        ? "grid"
+        : "none";
 
-            }
+  }
 
-            catch (error) {
+}
 
-              console.warn(
-                "Impossible d'enregistrer l'avatar.",
-                error
-              );
 
-            }
+// =============================================================
+// CHOIX AVATAR — SECTION
+// =============================================================
 
-          }
-        );
+avatarButtons.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        selectedAvatar =
+          button.dataset.avatar === "boy"
+            ? "boy"
+            : "girl";
+
+
+        updateAvatarUI();
 
       }
     );
 
+  }
+);
 
 
-    // =========================================================================
-    // PROFIL
-    // =========================================================================
+// =============================================================
+// CHOIX AVATAR — MODALE
+// =============================================================
 
-    const playButtons =
-      document.querySelectorAll(
-        ".js-play"
-      );
+profileAvatarButtons.forEach(
+  button => {
 
+    button.addEventListener(
+      "click",
+      () => {
 
-    const profileModal =
-      document.getElementById(
-        "profile-modal"
-      );
-
-
-    const profileClose =
-      document.getElementById(
-        "profile-close"
-      );
+        selectedAvatar =
+          button.dataset.profileAvatar === "boy"
+            ? "boy"
+            : "girl";
 
 
-    const profileStart =
-      document.getElementById(
-        "profile-start"
-      );
-
-
-    const playerNameInput =
-      document.getElementById(
-        "player-name"
-      );
-
-
-    const profileError =
-      document.getElementById(
-        "profile-error"
-      );
-
-
-    const profileAvatarButtons =
-      document.querySelectorAll(
-        "[data-profile-avatar]"
-      );
-
-
-    let selectedProfileAvatar =
-      pageSelectedAvatar;
-
-
-
-    // =========================================================================
-    // CHARGER PROFIL
-    // =========================================================================
-
-    try {
-
-      const savedName =
-        localStorage.getItem(
-          "etsi-player-name"
-        );
-
-
-      const savedAvatar =
-        localStorage.getItem(
-          "etsi-avatar"
-        );
-
-
-      if (
-        savedName &&
-        playerNameInput
-      ) {
-
-        playerNameInput.value =
-          savedName;
-
-      }
-
-
-      if (
-        savedAvatar === "girl" ||
-        savedAvatar === "boy"
-      ) {
-
-        selectedProfileAvatar =
-          savedAvatar;
-
-      }
-
-    }
-
-    catch (error) {
-
-      console.warn(
-        "Impossible de récupérer le profil.",
-        error
-      );
-
-    }
-
-
-
-    // =========================================================================
-    // CHOIX AVATAR PROFIL
-    // =========================================================================
-
-    function updateProfileAvatar() {
-
-      profileAvatarButtons.forEach(
-        button => {
-
-          button.classList.toggle(
-            "selected",
-            button.dataset.profileAvatar ===
-              selectedProfileAvatar
-          );
-
-        }
-      );
-
-    }
-
-
-    updateProfileAvatar();
-
-
-
-    profileAvatarButtons.forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            selectedProfileAvatar =
-              button.dataset.profileAvatar;
-
-
-            updateProfileAvatar();
-
-          }
-        );
+        updateAvatarUI();
 
       }
     );
 
+  }
+);
 
 
-    // =========================================================================
-    // OUVRIR MODALE
-    // =========================================================================
+// =============================================================
+// OUVERTURE DE LA MODALE
+// =============================================================
 
-    function openProfileModal() {
+function openProfileModal() {
 
-      if (!profileModal) {
+  if (!profileModal) {
+    return;
+  }
 
-        return;
 
+  // -----------------------------------------------------------
+  // RECHARGER L'AVATAR SAUVEGARDÉ
+  // -----------------------------------------------------------
+
+  selectedAvatar =
+    localStorage.getItem(
+      STORAGE_KEYS.avatar
+    ) === "boy"
+      ? "boy"
+      : "girl";
+
+
+  // -----------------------------------------------------------
+  // RECHARGER LE PRÉNOM
+  // -----------------------------------------------------------
+
+  const savedName =
+    localStorage.getItem(
+      STORAGE_KEYS.playerName
+    );
+
+
+  if (playerNameInput) {
+
+    playerNameInput.value =
+      savedName || "";
+
+  }
+
+
+  // -----------------------------------------------------------
+  // EFFACER ERREUR
+  // -----------------------------------------------------------
+
+  if (profileError) {
+
+    profileError.textContent =
+      "";
+
+  }
+
+
+  updateAvatarUI();
+
+
+  // -----------------------------------------------------------
+  // AFFICHER
+  // -----------------------------------------------------------
+
+  profileModal.classList.add(
+    "open"
+  );
+
+
+  profileModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+
+  // -----------------------------------------------------------
+  // FOCUS
+  // -----------------------------------------------------------
+
+  setTimeout(
+    () => {
+
+      if (playerNameInput) {
+        playerNameInput.focus();
       }
 
+    },
+    50
+  );
 
-      selectedProfileAvatar =
-        pageSelectedAvatar;
-
-
-      updateProfileAvatar();
-
-
-      profileModal.classList.add(
-        "open"
-      );
+}
 
 
-      profileModal.setAttribute(
-        "aria-hidden",
-        "false"
-      );
+// =============================================================
+// FERMETURE DE LA MODALE
+// =============================================================
+
+function closeProfileModal() {
+
+  if (!profileModal) {
+    return;
+  }
 
 
-      document.body.classList.add(
-        "profile-open"
-      );
+  profileModal.classList.remove(
+    "open"
+  );
 
+
+  profileModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+
+// =============================================================
+// NETTOYAGE DU PRÉNOM
+// =============================================================
+
+function sanitizePlayerName(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+
+    .trim()
+
+    .replace(
+      /\s+/g,
+      " "
+    )
+
+    .slice(
+      0,
+      20
+    );
+
+}
+
+
+// =============================================================
+// COMMENCER LE JEU
+// =============================================================
+
+function startGame() {
+
+  const name =
+    sanitizePlayerName(
+      playerNameInput
+        ? playerNameInput.value
+        : ""
+    );
+
+
+  // -----------------------------------------------------------
+  // PRÉNOM OBLIGATOIRE
+  // -----------------------------------------------------------
+
+  if (
+    name.length < 2
+  ) {
+
+    if (profileError) {
+
+      profileError.textContent =
+        "Entre un prénom d'au moins 2 caractères.";
+
+    }
+
+
+    if (playerNameInput) {
+
+      playerNameInput.focus();
+
+    }
+
+
+    return;
+
+  }
+
+
+  // -----------------------------------------------------------
+  // SAUVEGARDER LE PRÉNOM
+  // -----------------------------------------------------------
+
+  localStorage.setItem(
+    STORAGE_KEYS.playerName,
+    name
+  );
+
+
+  // -----------------------------------------------------------
+  // SAUVEGARDER L'AVATAR
+  // -----------------------------------------------------------
+
+  localStorage.setItem(
+    STORAGE_KEYS.avatar,
+    selectedAvatar
+  );
+
+
+  // -----------------------------------------------------------
+  // OUVRIR LE JEU
+  // -----------------------------------------------------------
+
+  window.location.href =
+    "jeu.html";
+
+}
+
+
+// =============================================================
+// BOUTON THÈME
+// =============================================================
+
+if (themeButton) {
+
+  themeButton.addEventListener(
+    "click",
+    toggleTheme
+  );
+
+}
+
+
+// =============================================================
+// TOUS LES BOUTONS "JOUER"
+// =============================================================
+
+playButtons.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      openProfileModal
+    );
+
+  }
+);
+
+
+// =============================================================
+// BOUTON FERMER
+// =============================================================
+
+if (profileCloseButton) {
+
+  profileCloseButton.addEventListener(
+    "click",
+    closeProfileModal
+  );
+
+}
+
+
+// =============================================================
+// CLIC SUR LE FOND DE LA MODALE
+// =============================================================
+
+const profileBackdrop =
+  profileModal
+    ? profileModal.querySelector(
+        ".profile-backdrop"
+      )
+    : null;
+
+
+if (profileBackdrop) {
+
+  profileBackdrop.addEventListener(
+    "click",
+    closeProfileModal
+  );
+
+}
+
+
+// =============================================================
+// BOUTON "PRENDRE LE VOLANT"
+// =============================================================
+
+if (profileStartButton) {
+
+  profileStartButton.addEventListener(
+    "click",
+    startGame
+  );
+
+}
+
+
+// =============================================================
+// CHAMP PRÉNOM
+// =============================================================
+
+if (playerNameInput) {
+
+
+  // -----------------------------------------------------------
+  // EFFACER L'ERREUR DÈS QUE L'UTILISATEUR ÉCRIT
+  // -----------------------------------------------------------
+
+  playerNameInput.addEventListener(
+    "input",
+    () => {
 
       if (profileError) {
 
@@ -471,338 +614,63 @@ document.addEventListener(
 
       }
 
-
-      setTimeout(
-        () => {
-
-          if (playerNameInput) {
-
-            playerNameInput.focus();
-
-          }
-
-        },
-        150
-      );
-
     }
+  );
 
 
+  // -----------------------------------------------------------
+  // ENTRÉE = COMMENCER
+  // -----------------------------------------------------------
 
-    // =========================================================================
-    // FERMER MODALE
-    // =========================================================================
+  playerNameInput.addEventListener(
+    "keydown",
+    event => {
 
-    function closeProfileModal() {
+      if (
+        event.key === "Enter"
+      ) {
 
-      if (!profileModal) {
-
-        return;
+        startGame();
 
       }
 
-
-      profileModal.classList.remove(
-        "open"
-      );
-
-
-      profileModal.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-
-      document.body.classList.remove(
-        "profile-open"
-      );
-
     }
+  );
 
+}
 
 
-    // =========================================================================
-    // BOUTONS JOUER
-    // =========================================================================
+// =============================================================
+// ÉCHAP = FERMER
+// =============================================================
 
-    playButtons.forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          event => {
-
-            event.preventDefault();
-
-            openProfileModal();
-
-          }
-        );
-
-      }
-    );
-
-
-
-    // =========================================================================
-    // FERMETURE
-    // =========================================================================
-
-    if (profileClose) {
-
-      profileClose.addEventListener(
-        "click",
-        closeProfileModal
-      );
-
-    }
-
-
-
-    const profileBackdrop =
-      profileModal
-        ?.querySelector(
-          ".profile-backdrop"
-        );
-
-
-    if (profileBackdrop) {
-
-      profileBackdrop.addEventListener(
-        "click",
-        closeProfileModal
-      );
-
-    }
-
-
-
-    document.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Escape" &&
-          profileModal?.classList.contains(
-            "open"
-          )
-        ) {
-
-          closeProfileModal();
-
-        }
-
-      }
-    );
-
-
-
-    // =========================================================================
-    // LANCER JEU
-    // =========================================================================
-
-    if (profileStart) {
-
-      profileStart.addEventListener(
-        "click",
-        () => {
-
-          if (!playerNameInput) {
-
-            return;
-
-          }
-
-
-          const playerName =
-            playerNameInput.value
-              .trim()
-              .replace(
-                /\s+/g,
-                " "
-              );
-
-
-          if (
-            playerName.length < 2
-          ) {
-
-            if (profileError) {
-
-              profileError.textContent =
-                "Entre ton prénom pour continuer.";
-
-            }
-
-
-            playerNameInput.focus();
-
-            return;
-
-          }
-
-
-          if (profileError) {
-
-            profileError.textContent =
-              "";
-
-          }
-
-
-          try {
-
-            localStorage.setItem(
-              "etsi-player-name",
-              playerName
-            );
-
-
-            localStorage.setItem(
-              "etsi-avatar",
-              selectedProfileAvatar
-            );
-
-          }
-
-          catch (error) {
-
-            console.warn(
-              "Impossible d'enregistrer le profil.",
-              error
-            );
-
-          }
-
-
-          window.location.href =
-            "jeu.html";
-
-        }
-      );
-
-    }
-
-
-
-    // =========================================================================
-    // ENTREE DANS INPUT
-    // =========================================================================
-
-    if (playerNameInput) {
-
-      playerNameInput.addEventListener(
-        "keydown",
-        event => {
-
-          if (
-            event.key === "Enter"
-          ) {
-
-            event.preventDefault();
-
-            profileStart?.click();
-
-          }
-
-        }
-      );
-
-    }
-
-
-
-    // =========================================================================
-    // SCROLL SECTIONS
-    // =========================================================================
-
-    const sections =
-      document.querySelectorAll(
-        ".section"
-      );
-
+document.addEventListener(
+  "keydown",
+  event => {
 
     if (
-      "IntersectionObserver"
-      in window
+      event.key === "Escape" &&
+      profileModal &&
+      profileModal.classList.contains(
+        "open"
+      )
     ) {
 
-      sections.forEach(
-        section => {
-
-          section.style.opacity =
-            "0";
-
-          section.style.transform =
-            "translateY(18px)";
-
-          section.style.transition =
-            "opacity 0.65s ease, transform 0.65s ease";
-
-        }
-      );
-
-
-      const observer =
-        new IntersectionObserver(
-
-          entries => {
-
-            entries.forEach(
-              entry => {
-
-                if (
-                  entry.isIntersecting
-                ) {
-
-                  entry.target.style.opacity =
-                    "1";
-
-                  entry.target.style.transform =
-                    "translateY(0)";
-
-
-                  observer.unobserve(
-                    entry.target
-                  );
-
-                }
-
-              }
-            );
-
-          },
-
-          {
-
-            threshold:
-              0.06,
-
-            rootMargin:
-              "70px 0px -20px 0px"
-
-          }
-
-        );
-
-
-      sections.forEach(
-        section => {
-
-          observer.observe(
-            section
-          );
-
-        }
-      );
+      closeProfileModal();
 
     }
 
+  }
+);
 
 
-    // =========================================================================
-    // HEADER SCROLL
-    // =========================================================================
+// =============================================================
+// EFFET HEADER AU SCROLL
+// =============================================================
+
+window.addEventListener(
+  "scroll",
+  () => {
 
     const header =
       document.querySelector(
@@ -810,175 +678,80 @@ document.addEventListener(
       );
 
 
-    function updateHeader() {
-
-      if (!header) {
-
-        return;
-
-      }
+    if (!header) {
+      return;
+    }
 
 
-      header.classList.toggle(
-        "scrolled",
-        window.scrollY > 15
+    header.classList.toggle(
+      "scrolled",
+      window.scrollY > 10
+    );
+
+  },
+  {
+    passive: true
+  }
+);
+
+
+// =============================================================
+// SYNCHRONISATION ENTRE ONGLETS
+// =============================================================
+
+window.addEventListener(
+  "storage",
+  event => {
+
+
+    // ---------------------------------------------------------
+    // THÈME
+    // ---------------------------------------------------------
+
+    if (
+      event.key ===
+      STORAGE_KEYS.theme
+    ) {
+
+      applyTheme(
+        getCurrentTheme(),
+        false
       );
 
     }
 
 
-    updateHeader();
+    // ---------------------------------------------------------
+    // AVATAR
+    // ---------------------------------------------------------
+
+    if (
+      event.key ===
+      STORAGE_KEYS.avatar
+    ) {
+
+      selectedAvatar =
+        event.newValue === "boy"
+          ? "boy"
+          : "girl";
 
 
-    window.addEventListener(
-      "scroll",
-      updateHeader,
-      {
-        passive: true
-      }
-    );
-
-
-
-    // =========================================================================
-    // PETIT PARALLAX HERO
-    // =========================================================================
-
-    const heroStage =
-      document.querySelector(
-        ".hero-stage"
-      );
-
-
-    if (heroStage) {
-
-      window.addEventListener(
-        "mousemove",
-        event => {
-
-          if (
-            window.innerWidth <
-            1050
-          ) {
-
-            heroStage.style.transform =
-              "";
-
-            return;
-
-          }
-
-
-          const x =
-            (
-              event.clientX /
-              window.innerWidth
-              -
-              0.5
-            );
-
-
-          const y =
-            (
-              event.clientY /
-              window.innerHeight
-              -
-              0.5
-            );
-
-
-          heroStage.style.transform =
-            `translate(${x * 4}px, ${y * 4}px)`;
-
-        }
-      );
-
-
-      document.addEventListener(
-        "mouseleave",
-        () => {
-
-          heroStage.style.transform =
-            "";
-
-        }
-      );
+      updateAvatarUI();
 
     }
-
-
-
-    // =========================================================================
-    // LIENS INTERNES
-    // =========================================================================
-
-    const internalLinks =
-      document.querySelectorAll(
-        'a[href^="#"]'
-      );
-
-
-    internalLinks.forEach(
-      link => {
-
-        link.addEventListener(
-          "click",
-          event => {
-
-            const href =
-              link.getAttribute(
-                "href"
-              );
-
-
-            if (
-              !href ||
-              href === "#"
-            ) {
-
-              return;
-
-            }
-
-
-            const target =
-              document.querySelector(
-                href
-              );
-
-
-            if (!target) {
-
-              return;
-
-            }
-
-
-            event.preventDefault();
-
-
-            target.scrollIntoView(
-              {
-
-                behavior:
-                  "smooth",
-
-                block:
-                  "start"
-
-              }
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-    console.log(
-      "ET SI ? — Landing page prête."
-    );
 
   }
 );
+
+
+// =============================================================
+// INITIALISATION
+// =============================================================
+
+applyTheme(
+  getCurrentTheme(),
+  false
+);
+
+
+updateAvatarUI();
