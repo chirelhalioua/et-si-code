@@ -125,7 +125,7 @@
 
       
         <a
-      href="https://et-si-code-one.vercel.app/"
+      href="index.html"
       class="brand"
       aria-label="Accueil ET SI ?"
     >
@@ -290,6 +290,7 @@
             <a
               href="#concept"
               class="ghost-button"
+              onclick="document.getElementById('concept').scrollIntoView({ behavior: 'smooth', block: 'start' }); return false;"
             >
               Découvrir le jeu
             </a>
@@ -418,6 +419,7 @@
       <a
         href="#concept"
         class="scroll-indicator"
+        onclick="document.getElementById('concept').scrollIntoView({ behavior: 'smooth', block: 'start' }); return false;"
       >
 
         <span>
@@ -971,6 +973,22 @@
   </main>
 
 
+  <!-- =====================================================
+       BONNE ROUTE
+  ====================================================== -->
+
+  <div class="footer-road-message">
+    <span class="footer-road-line" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+
+    <strong>Bonne route</strong>
+    <span aria-hidden="true">💛</span>
+  </div>
+
+
 
   <!-- =====================================================
        FOOTER
@@ -980,36 +998,29 @@
 
 
 
-<div class="footer-brand">
-  <div class="footer-logo-main" aria-label="ET SI ?">
-    <span class="footer-logo-text">ET SI</span>
-    <span class="footer-logo-badge">?</span>
-  </div>
-</div>
+    <div class="footer-brand">
+      <div class="footer-logo-main" aria-label="ET SI ?">
+        <span class="footer-logo-text">ET SI</span>
+        <span class="footer-logo-badge">?</span>
+      </div>
+    </div>
 
     <p>
       Observe · Anticipe · Décide
     </p>
 
 
-<span>
-  Développé avec 💛 par
+    <p class="footer-credit">
+      Développé avec 💛 par
 
-  <a
-    href="https://chirelhalioua.fr/"
-    target="_blank"
-    rel="noopener noreferrer"
-    style="
-      color: #facc15;
-      text-decoration: underline;
-      text-decoration-color: #facc15;
-      text-underline-offset: 4px;
-      font-weight: 700;
-    "
-  >
-    Chirel
-  </a>
-</span>
+      <a
+        href="https://chirelhalioua.fr/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chirel
+      </a>
+    </p>
 
   </footer>
 
