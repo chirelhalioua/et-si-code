@@ -17,13 +17,10 @@
 
   <title>ET SI ? — Décide sur la route</title>
 
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="512x512"
-    href="favicons/favicon-16x16.png"
-  >
-
+  <!-- =====================================================
+       THÈME AVANT CHARGEMENT
+       Évite le flash clair/sombre
+====================================================== -->
 
   <script>
     (function () {
@@ -68,6 +65,9 @@
     })();
   </script>
 
+<!-- =====================================================
+       POLICE
+====================================================== -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -82,6 +82,19 @@
     rel="stylesheet"
   >
 
+<!-- =====================================================
+       FAVICON
+====================================================== -->
+
+
+    <link rel="icon" type="image/png" sizes="16x16"  href="/favicons/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+
+<!-- =====================================================
+       CSS
+====================================================== -->
 
   <style>
 
@@ -107,6 +120,9 @@
     href="landing.css"
   >
 
+<!-- =====================================================
+       JS
+====================================================== -->
 
   <script
     src="landing.js"
@@ -297,7 +313,6 @@
             <a
               href="#concept"
               class="ghost-button"
-              onclick="document.getElementById('concept').scrollIntoView({ behavior: 'smooth', block: 'start' }); return false;"
             >
               Découvrir le jeu
             </a>
@@ -426,7 +441,6 @@
       <a
         href="#concept"
         class="scroll-indicator"
-        onclick="document.getElementById('concept').scrollIntoView({ behavior: 'smooth', block: 'start' }); return false;"
       >
 
         <span>
