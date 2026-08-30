@@ -359,8 +359,20 @@ button {
 
 .game-nav-icon {
   display: none;
-  font-size: 14px;
-  line-height: 1;
+  width: 17px;
+  height: 17px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.game-nav-icon .nav-icon-fill {
+  fill: currentColor;
+  stroke: none;
 }
 
 
@@ -2627,7 +2639,7 @@ and
 
 
   .game-nav-icon {
-    display: inline;
+    display: block;
   }
 
 
