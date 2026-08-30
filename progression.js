@@ -54,6 +54,14 @@ let availableSeries =
   [];
 
 
+let currentAccountUser =
+  null;
+
+
+let isPasswordRecovery =
+  false;
+
+
 const emptyState =
   document.getElementById(
     "progress-empty"
@@ -111,6 +119,48 @@ const accountLogout =
 const accountMessage =
   document.getElementById(
     "account-message"
+  );
+
+
+const accountForgotPassword =
+  document.getElementById(
+    "account-forgot-password"
+  );
+
+
+const passwordResetForm =
+  document.getElementById(
+    "password-reset-form"
+  );
+
+
+const newPassword =
+  document.getElementById(
+    "new-password"
+  );
+
+
+const confirmNewPassword =
+  document.getElementById(
+    "confirm-new-password"
+  );
+
+
+const progressEmptyTitle =
+  document.getElementById(
+    "progress-empty-title"
+  );
+
+
+const progressEmptyText =
+  document.getElementById(
+    "progress-empty-text"
+  );
+
+
+const progressEmptyAction =
+  document.getElementById(
+    "progress-empty-action"
   );
 
 
@@ -461,6 +511,7 @@ function renderProgress() {
 
   if (history.length === 0) {
 
+    renderEmptyState();
     emptyState.hidden = false;
     return;
 
@@ -521,6 +572,49 @@ function renderProgress() {
 }
 
 
+function renderEmptyState() {
+
+  if (currentAccountUser) {
+
+    progressEmptyTitle.textContent =
+      "Ta progression commencera bientôt";
+
+
+    progressEmptyText.textContent =
+      "Termine une première tentative de 10 questions pour afficher tes résultats.";
+
+
+    progressEmptyAction.textContent =
+      "Commencer une tentative →";
+
+
+    progressEmptyAction.href =
+      "jeu.html";
+
+
+    return;
+
+  }
+
+
+  progressEmptyTitle.textContent =
+    "Connecte-toi pour retrouver ta progression";
+
+
+  progressEmptyText.textContent =
+    "Crée un compte ou connecte-toi pour synchroniser tes résultats sur tous tes appareils.";
+
+
+  progressEmptyAction.textContent =
+    "Se connecter ou créer un compte ↑";
+
+
+  progressEmptyAction.href =
+    "#account-title";
+
+}
+
+
 function setAccountMessage(
   message,
   type = ""
@@ -558,6 +652,19 @@ function renderAccount(user) {
     Boolean(user);
 
 
+  currentAccountUser =
+    user || null;
+
+
+  if (isPasswordRecovery) {
+
+    accountForm.hidden = true;
+    accountConnected.hidden = true;
+    return;
+
+  }
+
+
   accountForm.hidden =
     isConnected;
 
@@ -568,6 +675,22 @@ function renderAccount(user) {
 
   accountUserEmail.textContent =
     user?.email || "";
+
+}
+
+
+function showPasswordResetForm() {
+
+  isPasswordRecovery = true;
+
+  accountForm.hidden = true;
+  accountConnected.hidden = true;
+  passwordResetForm.hidden = false;
+
+
+  setAccountMessage(
+    "Choisis maintenant ton nouveau mot de passe."
+  );
 
 }
 
@@ -596,7 +719,10 @@ async function synchronizeAccount() {
     renderProgress();
 
 
-    if (result.user) {
+    if (
+      result.user &&
+      !isPasswordRecovery
+    ) {
 
       setAccountMessage(
         "Tes tentatives sont à jour sur cet appareil.",
@@ -746,6 +872,177 @@ accountSignup?.addEventListener(
 
   }
 );
+
+
+accountForgotPassword?.addEventListener(
+  "click",
+  async () => {
+
+    if (!window.ETSISync) {
+
+      setAccountMessage(
+        "La réinitialisation est momentanément indisponible.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (!accountEmail.value.trim()) {
+
+      accountEmail.focus();
+      accountEmail.reportValidity();
+      return;
+
+    }
+
+
+    setAccountLoading(true);
+    setAccountMessage("Envoi de l’e-mail…");
+
+
+    const { error } =
+      await window.ETSISync.client.auth
+        .resetPasswordForEmail(
+          accountEmail.value.trim(),
+          {
+            redirectTo:
+              `${window.location.origin}/progression.html?reset-password=1`
+          }
+        );
+
+
+    setAccountLoading(false);
+
+
+    if (error) {
+
+      setAccountMessage(
+        "Impossible d’envoyer l’e-mail de réinitialisation.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    setAccountMessage(
+      "Un lien de réinitialisation vient de t’être envoyé par e-mail.",
+      "success"
+    );
+
+  }
+);
+
+
+passwordResetForm?.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    if (
+      newPassword.value !==
+      confirmNewPassword.value
+    ) {
+
+      setAccountMessage(
+        "Les deux mots de passe ne correspondent pas.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const submitButton =
+      passwordResetForm.querySelector(
+        "button[type='submit']"
+      );
+
+
+    submitButton.disabled = true;
+
+
+    const { error } =
+      await window.ETSISync.client.auth
+        .updateUser({
+          password: newPassword.value
+        });
+
+
+    submitButton.disabled = false;
+
+
+    if (error) {
+
+      setAccountMessage(
+        "Le mot de passe n’a pas pu être modifié. Demande un nouveau lien.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    newPassword.value = "";
+    confirmNewPassword.value = "";
+    passwordResetForm.hidden = true;
+    isPasswordRecovery = false;
+
+
+    window.history.replaceState(
+      {},
+      "",
+      "progression.html"
+    );
+
+
+    setAccountMessage(
+      "Ton mot de passe a bien été modifié.",
+      "success"
+    );
+
+
+    await synchronizeAccount();
+
+  }
+);
+
+
+if (window.ETSISync) {
+
+  window.ETSISync.client.auth
+    .onAuthStateChange(
+      event => {
+
+        if (event === "PASSWORD_RECOVERY") {
+
+          showPasswordResetForm();
+
+        }
+
+      }
+    );
+
+}
+
+
+if (
+  new URLSearchParams(
+    window.location.search
+  ).get("reset-password") === "1"
+) {
+
+  showPasswordResetForm();
+
+}
 
 
 accountLogout?.addEventListener(
