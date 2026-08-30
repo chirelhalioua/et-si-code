@@ -1885,6 +1885,23 @@ async function startGameWithResume() {
   }
 
 
+  /*
+   * Une situation déjà validée ne doit jamais être
+   * proposée une seconde fois dans la modale de reprise.
+   */
+
+  if (
+    completedSituationIndexes
+      .includes(saved.situationIndex)
+  ) {
+
+    clearGameProgress();
+    startNewSituation();
+    return;
+
+  }
+
+
   const wantsResume =
     await openResumeModal(
       saved
@@ -2716,6 +2733,7 @@ function validateAnswer() {
 
     saveSessionProgress();
     renderSessionProgress();
+    clearGameProgress();
 
   }
 
@@ -3010,8 +3028,22 @@ function showSessionSummary() {
         { length: total },
         (_, index) => {
 
+          const situationIndex =
+            completedSituationIndexes[index];
+
+
+          const answerIndex =
+            sessionAnswers.findIndex(
+              item =>
+                item.situationIndex ===
+                situationIndex
+            );
+
+
           const answer =
-            sessionAnswers[index];
+            answerIndex >= 0
+              ? sessionAnswers[answerIndex]
+              : null;
 
 
           const isCorrect =
@@ -3024,7 +3056,7 @@ function showSessionSummary() {
             <button
               class="session-result-dot ${isCorrect ? "is-correct" : "is-incorrect"}"
               type="button"
-              data-answer-index="${index}"
+              data-answer-index="${answerIndex}"
               aria-label="Voir la question ${index + 1}"
               aria-pressed="false"
               ${answer ? "" : "disabled"}
@@ -3317,7 +3349,20 @@ function confirmExit() {
    * Couper l'audio.
    */
 
-  saveGameProgress();
+  if (
+    completedSituationIndexes
+      .includes(currentSituationIndex)
+  ) {
+
+    clearGameProgress();
+
+  }
+
+  else {
+
+    saveGameProgress();
+
+  }
 
   if (
     "speechSynthesis"
