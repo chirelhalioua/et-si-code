@@ -2261,11 +2261,18 @@ and
 
 
   .simulation-image-wrapper {
-    height: clamp(125px, 36vw, 155px);
+    height: clamp(145px, 42vw, 175px);
 
     aspect-ratio: auto;
 
     border-radius: 13px;
+  }
+
+
+  .scene-image {
+    object-fit: contain;
+
+    background: var(--panel);
   }
 
 
