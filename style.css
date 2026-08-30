@@ -2160,28 +2160,45 @@ and
 
 
   .game-header {
-    min-height: 64px;
+    min-height: 56px;
 
     gap: 8px;
   }
 
 
   .quiz-top {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    gap: 7px 10px;
   }
 
 
   .game-stats {
-    order: 3;
-
+    grid-column: 1 / -1;
     width: 100%;
+
+    gap: 6px;
   }
 
 
   .game-stat {
     flex: 1;
-
     min-width: 0;
+
+    padding: 4px 7px;
+
+    flex-direction: row;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 7px;
+  }
+
+
+  .game-stat strong {
+    font-size: 10px;
   }
 
 
@@ -2237,11 +2254,17 @@ and
 
 
   .game-card {
-    margin-top: 12px;
+    margin-top: 7px;
+
+    gap: 8px;
   }
 
 
   .simulation-image-wrapper {
+    height: clamp(125px, 36vw, 155px);
+
+    aspect-ratio: auto;
+
     border-radius: 13px;
   }
 
@@ -2264,42 +2287,56 @@ and
     min-height: auto;
 
     padding:
-      18px 14px;
+      11px 12px;
+  }
+
+
+  .quiz-divider {
+    margin: 9px 0;
   }
 
 
   .question-text {
-    font-size: 21px;
+    margin-bottom: 9px;
+
+    font-size: 16px;
+    line-height: 1.22;
+  }
+
+
+  .choices {
+    gap: 7px;
   }
 
 
   .choice {
-    min-height: 67px;
+    min-height: 45px;
   }
 
 
   .choice-letter {
-    width: 57px;
+    width: 42px;
 
-    flex-basis: 57px;
+    flex-basis: 42px;
 
-    font-size: 21px;
+    font-size: 17px;
   }
 
 
   .choice-label {
-    padding: 12px;
+    padding: 8px 10px;
 
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.25;
   }
 
 
   .main-action {
-    min-height: 55px;
+    min-height: 44px;
 
-    margin-top: 20px;
+    margin-top: 11px;
 
-    font-size: 14px;
+    font-size: 12px;
   }
 
 
