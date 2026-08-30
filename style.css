@@ -2176,17 +2176,19 @@ and
 
   .game-stats {
     grid-column: 1 / -1;
-    width: 100%;
+    width: min(100%, 210px);
+    justify-self: center;
 
     gap: 6px;
   }
 
 
   .game-stat {
-    flex: 1;
+    flex: 0 1 102px;
     min-width: 0;
+    min-height: 28px;
 
-    padding: 4px 7px;
+    padding: 5px 7px;
 
     flex-direction: row;
     justify-content: center;
@@ -2522,7 +2524,8 @@ and (min-width: 500px) {
   .game-stats {
     grid-column: 1 / -1;
 
-    width: 100%;
+    width: min(100%, 196px);
+    justify-self: center;
 
     gap: 5px;
   }
@@ -2530,10 +2533,11 @@ and (min-width: 500px) {
 
   .game-stat {
     min-width: 0;
+    min-height: 26px;
 
-    padding: 3px 6px;
+    padding: 4px 6px;
 
-    flex: 1;
+    flex: 0 1 96px;
     flex-direction: row;
     justify-content: center;
 
@@ -2714,6 +2718,7 @@ and (min-width: 500px) {
 
 
   .game-stat {
+    min-height: 24px;
     padding: 2px 5px;
   }
 
