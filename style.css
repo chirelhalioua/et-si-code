@@ -2578,6 +2578,94 @@ and (min-width: 500px) {
   }
 
 
+  .resume-modal,
+  .exit-confirm-modal {
+    padding: 7px;
+
+    align-items: start;
+
+    overflow-y: auto;
+  }
+
+
+  .resume-card,
+  .exit-confirm-card {
+    max-height: calc(100dvh - 14px);
+
+    padding: 12px 18px;
+
+    overflow-y: auto;
+
+    border-radius: 14px;
+  }
+
+
+  .resume-icon,
+  .exit-confirm-icon {
+    width: 36px;
+    height: 36px;
+
+    margin-bottom: 7px;
+
+    font-size: 18px;
+  }
+
+
+  .resume-eyebrow {
+    margin-bottom: 4px;
+
+    font-size: 8px;
+  }
+
+
+  .resume-card h2,
+  .exit-confirm-card h2 {
+    font-size: 18px;
+    line-height: 1.15;
+  }
+
+
+  .resume-info {
+    margin: 9px 0;
+
+    padding: 9px 11px;
+
+    gap: 3px;
+  }
+
+
+  .resume-scenario-title {
+    font-size: 11px;
+  }
+
+
+  .resume-progress-text {
+    font-size: 10px;
+  }
+
+
+  .resume-actions,
+  .exit-confirm-actions {
+    gap: 7px;
+  }
+
+
+  .resume-actions button,
+  .exit-confirm-actions button {
+    min-height: 38px;
+
+    font-size: 11px;
+  }
+
+
+  .exit-confirm-card p {
+    margin: 7px auto 10px;
+
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+
 }
 
 
