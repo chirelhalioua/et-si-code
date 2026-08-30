@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ma progression — ET SI ?</title>
+
+  <script>
+    (function () {
+      try {
+        const theme = localStorage.getItem("etsi-theme");
+        document.documentElement.dataset.theme =
+          theme === "light" ? "light" : "dark";
+      }
+      catch (error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="stylesheet" href="progression.css">
+  <script src="progression.js" defer></script>
+</head>
+
+<body>
+  <div class="progress-page">
+    <header class="progress-header">
+      <a class="progress-brand" href="index.html" aria-label="Accueil ET SI ?">
+        <span>ET SI</span>
+        <b>?</b>
+      </a>
+
+      <div class="progress-header-actions">
+        <a class="back-game" href="jeu.html">← Retour au jeu</a>
+
+        <button
+          id="progress-theme-toggle"
+          class="progress-theme-toggle"
+          type="button"
+          aria-label="Changer de thème"
+        >
+          <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="progress-intro">
+        <span class="progress-kicker">TON PARCOURS</span>
+        <h1>Ma progression globale</h1>
+        <p>
+          Une vue d’ensemble de tes différentes séries, sans mélanger
+          leurs résultats individuels.
+        </p>
+      </section>
+
+      <section id="global-summary" class="global-summary" aria-label="Résumé global" hidden>
+        <article>
+          <span>Séries jouées</span>
+          <strong id="global-series-count">0</strong>
+        </article>
+
+        <article>
+          <span>Tentatives</span>
+          <strong id="global-attempt-count">0</strong>
+        </article>
+
+        <article>
+          <span>Moyenne globale</span>
+          <strong id="global-average">0%</strong>
+        </article>
+
+        <article>
+          <span>Meilleur résultat</span>
+          <strong id="global-best">—</strong>
+        </article>
+      </section>
+
+      <section id="series-section" class="series-section" hidden>
+        <div class="section-heading">
+          <div>
+            <span>DÉTAIL</span>
+            <h2>Progression par série</h2>
+          </div>
+
+          <small>Les 5 dernières tentatives sont affichées pour chaque série.</small>
+        </div>
+
+        <div id="series-list" class="series-list"></div>
+      </section>
+
+      <section id="progress-empty" class="progress-empty" hidden>
+        <span aria-hidden="true">↗</span>
+        <h2>Ta progression commencera bientôt</h2>
+        <p>Termine une première tentative de 10 questions pour afficher tes résultats.</p>
+        <a href="jeu.html">Commencer une tentative →</a>
+      </section>
+    </main>
+
+    <footer class="progress-footer">
+      <span>Les résultats sont enregistrés sur cet appareil.</span>
+      <a href="index.html">ET SI ?</a>
+    </footer>
+  </div>
+</body>
+
+</html>
