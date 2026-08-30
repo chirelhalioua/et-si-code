@@ -117,7 +117,61 @@ button {
 }
 
 
-.back-game,
+.progress-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 4px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: var(--panel);
+}
+
+
+.progress-nav a {
+  min-height: 34px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border-radius: 10px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  transition:
+    background 0.16s ease,
+    color 0.16s ease;
+}
+
+
+.progress-nav a:hover {
+  color: var(--text);
+  background: var(--panel-light);
+}
+
+
+.progress-nav a.is-active {
+  color: #11151a;
+  background: var(--yellow);
+}
+
+
+.progress-nav-icon {
+  display: none;
+  font-size: 15px;
+  line-height: 1;
+}
+
+
 .progress-theme-toggle {
   min-height: 42px;
 
@@ -130,13 +184,6 @@ button {
 
   background: var(--panel);
   color: var(--text);
-}
-
-
-.back-game {
-  padding: 0 15px;
-  font-size: 12px;
-  font-weight: 800;
 }
 
 
@@ -512,10 +559,34 @@ button {
     font-size: 18px;
   }
 
-  .back-game {
-    min-height: 36px;
-    padding: 0 10px;
-    font-size: 9px;
+  .progress-header-actions {
+    gap: 6px;
+  }
+
+  .progress-nav {
+    gap: 2px;
+    padding: 3px;
+    border-radius: 12px;
+  }
+
+  .progress-nav a {
+    width: 34px;
+    min-height: 30px;
+    padding: 0;
+    border-radius: 9px;
+  }
+
+  .progress-nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .progress-nav-icon {
+    display: inline;
   }
 
   .progress-theme-toggle {
@@ -596,6 +667,22 @@ button {
     justify-content: center;
     gap: 6px;
     text-align: center;
+  }
+}
+
+
+@media (max-width: 390px) {
+  .progress-brand span {
+    font-size: 0;
+  }
+
+  .progress-brand span::after {
+    content: "ET SI";
+    font-size: 16px;
+  }
+
+  .progress-nav a {
+    width: 30px;
   }
 }
 
