@@ -3241,8 +3241,23 @@ and (min-width: 500px) {
 
   .session-result-ring {
     grid-row: 1;
-    width: 66px;
-    height: 66px;
+    width: 68px;
+    height: 68px;
+  }
+
+
+  .session-result-icon {
+    font-size: 14px;
+  }
+
+
+  .session-result-ring strong {
+    font-size: 19px;
+  }
+
+
+  .session-result-ring small {
+    font-size: 9px;
   }
 
 
