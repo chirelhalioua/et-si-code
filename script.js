@@ -354,7 +354,7 @@ function createSessionId() {
   }
 
 
-  return `partie-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return `tentative-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 }
 
@@ -3176,7 +3176,7 @@ function showSessionSummary() {
         (result, index) => `
           <span
             class="session-history-bar"
-            title="Partie ${gameHistory.length - recentResults.length + index + 1} : ${result.score}/${result.total}"
+            title="Tentative ${gameHistory.length - recentResults.length + index + 1} : ${result.score}/${result.total}"
             aria-label="${result.score} sur ${result.total}"
           >
             <i style="--history-percent: ${result.percentage}"></i>
@@ -3214,7 +3214,7 @@ function showSessionSummary() {
   if (text) {
 
     text.textContent =
-      "Résultat de ta partie";
+      "Résultat de ta tentative";
 
 
     text.classList.add(
@@ -3294,10 +3294,10 @@ function showSessionSummary() {
           ${scoreDots}
         </div>
 
-        <section class="session-history" aria-label="Progression globale">
+        <section class="session-history" aria-label="Historique des tentatives">
           <div class="session-history-metrics">
             <span>
-              <small>Parties</small>
+              <small>Tentatives</small>
               <strong>${gameHistory.length}</strong>
             </span>
             <span>
@@ -3311,7 +3311,7 @@ function showSessionSummary() {
           </div>
 
           <div class="session-history-recent">
-            <small>5 dernières</small>
+            <small>5 dernières tentatives</small>
             <div class="session-history-bars">
               ${recentBars}
             </div>
@@ -3448,7 +3448,7 @@ function showSessionSummary() {
 
 
   setActionButton(
-    "Recommencer une partie",
+    "Nouvelle tentative",
     "restart"
   );
 
