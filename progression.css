@@ -167,8 +167,20 @@ button {
 
 .progress-nav-icon {
   display: none;
-  font-size: 15px;
-  line-height: 1;
+  width: 17px;
+  height: 17px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.progress-nav-icon .nav-icon-fill {
+  fill: currentColor;
+  stroke: none;
 }
 
 
@@ -586,7 +598,7 @@ button {
   }
 
   .progress-nav-icon {
-    display: inline;
+    display: block;
   }
 
   .progress-theme-toggle {
