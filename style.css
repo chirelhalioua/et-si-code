@@ -1,3 +1,52 @@
+776:.quiz-divider {
+777-  width: 100%;
+778-  height: 1px;
+779-
+--
+804:.question-text {
+805-  margin:
+806-    0 0 27px;
+807-
+--
+1998:  .quiz-divider {
+1999-    margin:
+2000-      14px 0;
+2001-  }
+--
+2004:  .question-text {
+2005-    margin-bottom: 16px;
+2006-
+2007-    font-size: 20px;
+--
+2312:  .quiz-divider {
+2313-    margin: 11px 0;
+2314-  }
+2315-
+--
+2317:  .question-text {
+2318-    margin-bottom: 10px;
+2319-
+2320-    font-size: 16px;
+--
+2549:  .quiz-divider {
+2550-    margin: 8px 0;
+2551-  }
+2552-
+--
+2554:  .question-text {
+2555-    margin-bottom: 7px;
+2556-
+2557-    font-size: 14px;
+--
+2721:  .quiz-divider {
+2722-    margin: 6px 0;
+2723-  }
+2724-
+--
+2726:  .question-text {
+2727-    margin-bottom: 5px;
+2728-
+2729-    font-size: 12px;
 /* =========================================================
    ET SI ? — STYLE.CSS
    PAGE JEU
@@ -2310,12 +2359,12 @@ and
 
 
   .quiz-divider {
-    margin: 9px 0;
+    margin: 11px 0;
   }
 
 
   .question-text {
-    margin-bottom: 9px;
+    margin-bottom: 10px;
 
     font-size: 16px;
     line-height: 1.22;
@@ -2547,12 +2596,12 @@ and (min-width: 500px) {
 
 
   .quiz-divider {
-    margin: 6px 0;
+    margin: 8px 0;
   }
 
 
   .question-text {
-    margin-bottom: 6px;
+    margin-bottom: 7px;
 
     font-size: 14px;
     line-height: 1.18;
@@ -2719,12 +2768,12 @@ and (min-width: 500px) {
 
 
   .quiz-divider {
-    margin: 4px 0;
+    margin: 6px 0;
   }
 
 
   .question-text {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
     font-size: 12px;
     line-height: 1.13;
