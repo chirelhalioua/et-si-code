@@ -245,8 +245,13 @@ function renderSeriesCard(series) {
           <h3>${escapeHtml(series.title)}</h3>
         </div>
 
-        <strong class="series-last-score">
-          ${last.score}<small>/${last.total}</small>
+        <strong
+          class="series-last-score"
+          style="--score-percent: ${last.percentage}"
+          aria-label="Dernier score : ${last.score} sur ${last.total}"
+        >
+          <span class="score-ring-icon" aria-hidden="true">★</span>
+          <span>${last.score}<small>/${last.total}</small></span>
         </strong>
       </div>
 
@@ -324,6 +329,14 @@ function renderProgress() {
     "global-best"
   ).textContent =
     `${best.score}/${best.total}`;
+
+
+  document.getElementById(
+    "global-best-ring"
+  ).style.setProperty(
+    "--score-percent",
+    best.percentage
+  );
 
 
   seriesList.innerHTML =
