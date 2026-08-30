@@ -993,8 +993,28 @@ accountForgotPassword?.addEventListener(
 
     if (error) {
 
+      console.error(
+        "Erreur de réinitialisation :",
+        error
+      );
+
+
+      const errorText =
+        String(
+          error.message || ""
+        ).toLowerCase();
+
+
+      const resetErrorMessage =
+        error.status === 429 ||
+        errorText.includes("rate limit")
+          ? "Trop d’e-mails ont été demandés récemment. Attends un peu avant de réessayer ou configure un service SMTP personnalisé."
+          : errorText.includes("redirect")
+            ? "L’adresse de redirection n’est pas autorisée dans Supabase. Vérifie les Redirect URLs."
+            : `Impossible d’envoyer l’e-mail : ${error.message}`;
+
       setAccountMessage(
-        "Impossible d’envoyer l’e-mail de réinitialisation.",
+        resetErrorMessage,
         "error"
       );
 
