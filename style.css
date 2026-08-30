@@ -673,6 +673,48 @@ html[data-theme="light"] .theme-moon {
 
 
 /* =========================================================
+   SCORE ET PROGRESSION DE LA PARTIE
+========================================================= */
+
+.game-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+.game-stat {
+  min-width: 88px;
+  padding: 8px 11px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+
+  background: var(--panel-light);
+  color: var(--text-muted);
+
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+
+.game-stat strong {
+  color: var(--yellow);
+
+  font-size: 13px;
+  letter-spacing: normal;
+}
+
+
+/* =========================================================
    AUDIO
 ========================================================= */
 
@@ -2121,6 +2163,25 @@ and
     min-height: 64px;
 
     gap: 8px;
+  }
+
+
+  .quiz-top {
+    flex-wrap: wrap;
+  }
+
+
+  .game-stats {
+    order: 3;
+
+    width: 100%;
+  }
+
+
+  .game-stat {
+    flex: 1;
+
+    min-width: 0;
   }
 
 
