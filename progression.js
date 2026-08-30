@@ -80,6 +80,18 @@ const accountForm =
   );
 
 
+const accountPanel =
+  document.querySelector(
+    ".account-panel"
+  );
+
+
+const accountTitle =
+  document.getElementById(
+    "account-title"
+  );
+
+
 const accountEmail =
   document.getElementById(
     "account-email"
@@ -511,8 +523,13 @@ function renderProgress() {
 
   if (history.length === 0) {
 
-    renderEmptyState();
-    emptyState.hidden = false;
+    if (currentAccountUser) {
+
+      renderEmptyState();
+      emptyState.hidden = false;
+
+    }
+
     return;
 
   }
@@ -577,7 +594,7 @@ function renderEmptyState() {
   if (currentAccountUser) {
 
     progressEmptyTitle.textContent =
-      "Ta progression commencera bientôt";
+      "Aucune tentative pour le moment";
 
 
     progressEmptyText.textContent =
@@ -654,6 +671,24 @@ function renderAccount(user) {
 
   currentAccountUser =
     user || null;
+
+
+  accountPanel.classList.toggle(
+    "is-connected",
+    isConnected
+  );
+
+
+  accountTitle.textContent =
+    isConnected
+      ? "Ton espace joueur"
+      : "Retrouve ta progression partout";
+
+
+  accountPanel.classList.toggle(
+    "is-guest",
+    !isConnected
+  );
 
 
   if (isPasswordRecovery) {
