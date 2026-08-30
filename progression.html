@@ -29,6 +29,8 @@
 
   <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
   <link rel="stylesheet" href="progression.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-sync.js" defer></script>
   <script src="progression.js" defer></script>
 </head>
 
@@ -89,6 +91,51 @@
           Une vue d’ensemble de tes différentes séries, sans mélanger
           leurs résultats individuels.
         </p>
+      </section>
+
+      <section class="account-panel" aria-labelledby="account-title">
+        <div class="account-copy">
+          <span class="progress-kicker">SYNCHRONISATION</span>
+          <h2 id="account-title">Retrouve ta progression partout</h2>
+          <p>
+            Connecte-toi pour conserver les mêmes résultats sur ton téléphone,
+            ton ordinateur et tes différents navigateurs.
+          </p>
+        </div>
+
+        <form id="account-form" class="account-form">
+          <label>
+            Adresse e-mail
+            <input id="account-email" type="email" autocomplete="email" required>
+          </label>
+
+          <label>
+            Mot de passe
+            <input
+              id="account-password"
+              type="password"
+              autocomplete="current-password"
+              minlength="6"
+              required
+            >
+          </label>
+
+          <div class="account-actions">
+            <button id="account-login" type="submit">Se connecter</button>
+            <button id="account-signup" type="button">Créer mon compte</button>
+          </div>
+        </form>
+
+        <div id="account-connected" class="account-connected" hidden>
+          <span class="account-status-dot" aria-hidden="true"></span>
+          <div>
+            <strong>Progression synchronisée</strong>
+            <small id="account-user-email"></small>
+          </div>
+          <button id="account-logout" type="button">Se déconnecter</button>
+        </div>
+
+        <p id="account-message" class="account-message" role="status" aria-live="polite"></p>
       </section>
 
       <section id="global-summary" class="global-summary" aria-label="Résumé global" hidden>
