@@ -14,8 +14,19 @@ const DEFAULT_SERIES_TITLE =
   "Série 1 — Situations générales";
 
 
-const PUBLIC_SITE_URL =
-  "https://et-si-code-one.vercel.app";
+const IS_LOCAL_SITE =
+  [
+    "localhost",
+    "127.0.0.1"
+  ].includes(
+    window.location.hostname
+  );
+
+
+const APP_BASE_URL =
+  IS_LOCAL_SITE
+    ? window.location.origin
+    : "https://et-si-code-one.vercel.app";
 
 
 const globalSummary =
@@ -897,7 +908,7 @@ accountSignup?.addEventListener(
           password: accountPassword.value,
           options: {
             emailRedirectTo:
-              `${PUBLIC_SITE_URL}/progression.html`
+              `${APP_BASE_URL}/progression.html`
           }
         });
 
@@ -972,7 +983,7 @@ accountForgotPassword?.addEventListener(
           accountEmail.value.trim(),
           {
             redirectTo:
-              `${PUBLIC_SITE_URL}/progression.html?reset-password=1`
+              `${APP_BASE_URL}/progression.html?reset-password=1`
           }
         );
 
