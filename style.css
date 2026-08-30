@@ -711,6 +711,7 @@ html[data-theme="light"] .theme-moon {
 
   font-size: 13px;
   letter-spacing: normal;
+  white-space: nowrap;
 }
 
 
