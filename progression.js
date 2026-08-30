@@ -92,6 +92,18 @@ const accountTitle =
   );
 
 
+const accountKicker =
+  document.getElementById(
+    "account-kicker"
+  );
+
+
+const accountDescription =
+  document.getElementById(
+    "account-description"
+  );
+
+
 const accountEmail =
   document.getElementById(
     "account-email"
@@ -683,6 +695,18 @@ function renderAccount(user) {
     isConnected
       ? "Ton espace joueur"
       : "Retrouve ta progression partout";
+
+
+  accountKicker.textContent =
+    isConnected
+      ? "COMPTE CONNECTÉ"
+      : "SYNCHRONISATION";
+
+
+  accountDescription.textContent =
+    isConnected
+      ? "Tes résultats sont synchronisés sur tous tes appareils."
+      : "Connecte-toi pour conserver les mêmes résultats sur ton téléphone, ton ordinateur et tes différents navigateurs.";
 
 
   accountPanel.classList.toggle(
