@@ -2582,7 +2582,7 @@ and (min-width: 500px) {
   .exit-confirm-modal {
     padding: 7px;
 
-    align-items: start;
+    align-items: center;
 
     overflow-y: auto;
   }
