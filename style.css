@@ -1005,6 +1005,100 @@ html[data-theme="light"] .theme-moon {
 }
 
 
+.session-history {
+  width: 100%;
+  padding: 10px 11px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  background: var(--panel);
+}
+
+
+.session-history-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+
+.session-history-metrics > span {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+
+.session-history small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+.session-history-metrics strong {
+  color: var(--yellow);
+  font-size: 13px;
+}
+
+
+.session-history-recent {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 9px;
+}
+
+
+.session-history-bars {
+  height: 25px;
+
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+
+.session-history-bar {
+  position: relative;
+
+  width: 9px;
+  height: 25px;
+
+  overflow: hidden;
+
+  display: block;
+
+  border-radius: 999px;
+
+  background: var(--panel-light);
+}
+
+
+.session-history-bar i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: max(3px, calc(var(--history-percent) * 1%));
+
+  border-radius: inherit;
+
+  background: var(--yellow);
+}
+
+
 .session-result-detail {
   width: 100%;
   max-height: 190px;
@@ -3213,6 +3307,23 @@ and (min-width: 500px) {
     padding: 9px 10px;
   }
 
+
+  .session-history {
+    padding: 8px 9px;
+    gap: 6px;
+  }
+
+
+  .session-history-metrics strong {
+    font-size: 11px;
+  }
+
+
+  .session-history-bars,
+  .session-history-bar {
+    height: 20px;
+  }
+
 }
 
 
@@ -3288,6 +3399,23 @@ and (min-width: 500px) {
     grid-column: 1 / -1;
     max-height: 118px;
     padding: 9px 10px;
+  }
+
+
+  .session-history {
+    grid-column: 1 / -1;
+    padding: 7px 9px;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px 12px;
+  }
+
+
+  .session-history-bars,
+  .session-history-bar {
+    height: 18px;
   }
 
 }
