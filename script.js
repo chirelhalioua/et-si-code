@@ -21,7 +21,13 @@ const CONFIG = {
     "girl",
 
   defaultTheme:
-    "dark"
+    "dark",
+
+  seriesId:
+    "serie-generale-1",
+
+  seriesTitle:
+    "Série 1 — Situations générales"
 
 };
 
@@ -1096,13 +1102,33 @@ function loadGameHistory() {
 
 
     return Array.isArray(history)
-      ? history.filter(
-          result =>
-            result &&
-            typeof result.sessionId === "string" &&
-            Number.isInteger(result.score) &&
-            Number.isInteger(result.total)
-        )
+      ? history
+          .filter(
+            result =>
+              result &&
+              typeof result.sessionId === "string" &&
+              Number.isInteger(result.score) &&
+              Number.isInteger(result.total)
+          )
+          .map(
+            result => ({
+              ...result,
+              seriesId:
+                typeof result.seriesId === "string"
+                  ? result.seriesId
+                  : CONFIG.seriesId,
+              seriesTitle:
+                typeof result.seriesTitle === "string"
+                  ? result.seriesTitle
+                  : CONFIG.seriesTitle,
+              percentage:
+                Number.isFinite(result.percentage)
+                  ? result.percentage
+                  : Math.round(
+                      (result.score / result.total) * 100
+                    )
+            })
+          )
       : [];
 
   }
@@ -1144,6 +1170,10 @@ function recordSessionResult(
     history.push({
       sessionId:
         currentSessionId,
+      seriesId:
+        CONFIG.seriesId,
+      seriesTitle:
+        CONFIG.seriesTitle,
       score,
       total,
       percentage:
@@ -3143,8 +3173,16 @@ function showSessionSummary() {
       : loadGameHistory();
 
 
+  const seriesHistory =
+    gameHistory.filter(
+      result =>
+        result.seriesId ===
+        CONFIG.seriesId
+    );
+
+
   const bestResult =
-    gameHistory.reduce(
+    seriesHistory.reduce(
       (best, result) =>
         !best ||
         result.percentage > best.percentage
@@ -3155,19 +3193,19 @@ function showSessionSummary() {
 
 
   const averagePercentage =
-    gameHistory.length > 0
+    seriesHistory.length > 0
       ? Math.round(
-          gameHistory.reduce(
+          seriesHistory.reduce(
             (sum, result) =>
               sum + result.percentage,
             0
-          ) / gameHistory.length
+          ) / seriesHistory.length
         )
       : 0;
 
 
   const recentResults =
-    gameHistory.slice(-5);
+    seriesHistory.slice(-5);
 
 
   const recentBars =
@@ -3176,7 +3214,7 @@ function showSessionSummary() {
         (result, index) => `
           <span
             class="session-history-bar"
-            title="Tentative ${gameHistory.length - recentResults.length + index + 1} : ${result.score}/${result.total}"
+            title="Tentative ${seriesHistory.length - recentResults.length + index + 1} : ${result.score}/${result.total}"
             aria-label="${result.score} sur ${result.total}"
           >
             <i style="--history-percent: ${result.percentage}"></i>
@@ -3295,10 +3333,12 @@ function showSessionSummary() {
         </div>
 
         <section class="session-history" aria-label="Historique des tentatives">
+          <strong class="session-history-title">Cette série</strong>
+
           <div class="session-history-metrics">
             <span>
               <small>Tentatives</small>
-              <strong>${gameHistory.length}</strong>
+              <strong>${seriesHistory.length}</strong>
             </span>
             <span>
               <small>Meilleur</small>
@@ -3317,6 +3357,11 @@ function showSessionSummary() {
             </div>
           </div>
         </section>
+
+        <a class="global-progress-link" href="progression.html">
+          Voir ma progression globale
+          <span aria-hidden="true">→</span>
+        </a>
 
         <div class="session-result-detail" aria-live="polite" hidden>
           <div class="session-result-detail-head">
