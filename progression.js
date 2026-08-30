@@ -66,6 +66,54 @@ const themeToggle =
   );
 
 
+const accountForm =
+  document.getElementById(
+    "account-form"
+  );
+
+
+const accountEmail =
+  document.getElementById(
+    "account-email"
+  );
+
+
+const accountPassword =
+  document.getElementById(
+    "account-password"
+  );
+
+
+const accountSignup =
+  document.getElementById(
+    "account-signup"
+  );
+
+
+const accountConnected =
+  document.getElementById(
+    "account-connected"
+  );
+
+
+const accountUserEmail =
+  document.getElementById(
+    "account-user-email"
+  );
+
+
+const accountLogout =
+  document.getElementById(
+    "account-logout"
+  );
+
+
+const accountMessage =
+  document.getElementById(
+    "account-message"
+  );
+
+
 function escapeHtml(value) {
 
   return String(value)
@@ -403,6 +451,10 @@ function applySeriesFilter(seriesId) {
 
 function renderProgress() {
 
+  emptyState.hidden = true;
+  globalSummary.hidden = true;
+  seriesSection.hidden = true;
+
   const history =
     loadHistory();
 
@@ -467,6 +519,261 @@ function renderProgress() {
   seriesSection.hidden = false;
 
 }
+
+
+function setAccountMessage(
+  message,
+  type = ""
+) {
+
+  accountMessage.textContent =
+    message;
+
+
+  accountMessage.className =
+    `account-message ${type}`.trim();
+
+}
+
+
+function setAccountLoading(isLoading) {
+
+  accountForm
+    .querySelectorAll("button, input")
+    .forEach(
+      element => {
+
+        element.disabled =
+          isLoading;
+
+      }
+    );
+
+}
+
+
+function renderAccount(user) {
+
+  const isConnected =
+    Boolean(user);
+
+
+  accountForm.hidden =
+    isConnected;
+
+
+  accountConnected.hidden =
+    !isConnected;
+
+
+  accountUserEmail.textContent =
+    user?.email || "";
+
+}
+
+
+async function synchronizeAccount() {
+
+  if (!window.ETSISync) {
+
+    setAccountMessage(
+      "La connexion est momentanément indisponible.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const result =
+      await window.ETSISync.syncHistory();
+
+
+    renderAccount(result.user);
+    renderProgress();
+
+
+    if (result.user) {
+
+      setAccountMessage(
+        "Tes tentatives sont à jour sur cet appareil.",
+        "success"
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+
+    setAccountMessage(
+      "Impossible de synchroniser pour le moment. Tes résultats restent enregistrés sur cet appareil.",
+      "error"
+    );
+
+  }
+
+}
+
+
+accountForm?.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    if (!window.ETSISync) {
+
+      setAccountMessage(
+        "La connexion est momentanément indisponible.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    setAccountLoading(true);
+    setAccountMessage("Connexion en cours…");
+
+
+    const { error } =
+      await window.ETSISync.client.auth
+        .signInWithPassword({
+          email: accountEmail.value.trim(),
+          password: accountPassword.value
+        });
+
+
+    setAccountLoading(false);
+
+
+    if (error) {
+
+      setAccountMessage(
+        "E-mail ou mot de passe incorrect.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    accountPassword.value = "";
+    await synchronizeAccount();
+
+  }
+);
+
+
+accountSignup?.addEventListener(
+  "click",
+  async () => {
+
+    if (!window.ETSISync) {
+
+      setAccountMessage(
+        "La création de compte est momentanément indisponible.",
+        "error"
+      );
+
+      return;
+
+    }
+
+    if (!accountForm.reportValidity()) {
+
+      return;
+
+    }
+
+
+    setAccountLoading(true);
+    setAccountMessage("Création du compte…");
+
+
+    const { data, error } =
+      await window.ETSISync.client.auth
+        .signUp({
+          email: accountEmail.value.trim(),
+          password: accountPassword.value,
+          options: {
+            emailRedirectTo:
+              `${window.location.origin}/progression.html`
+          }
+        });
+
+
+    setAccountLoading(false);
+
+
+    if (error) {
+
+      setAccountMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (data.session) {
+
+      accountPassword.value = "";
+      await synchronizeAccount();
+
+    }
+
+    else {
+
+      setAccountMessage(
+        "Compte créé. Consulte ton e-mail pour confirmer ton inscription, puis connecte-toi.",
+        "success"
+      );
+
+    }
+
+  }
+);
+
+
+accountLogout?.addEventListener(
+  "click",
+  async () => {
+
+    if (!window.ETSISync) {
+
+      return;
+
+    }
+
+    await window.ETSISync.client.auth
+      .signOut();
+
+
+    window.ETSISync
+      .clearLocalAccountHistory();
+
+
+    renderAccount(null);
+    renderProgress();
+    setAccountMessage(
+      "Tu es déconnectée. Les nouvelles tentatives resteront enregistrées localement jusqu’à ta prochaine connexion."
+    );
+
+  }
+);
 
 
 seriesFilter?.addEventListener(
@@ -557,3 +864,4 @@ themeToggle
 
 updateThemeIcon();
 renderProgress();
+synchronizeAccount();
