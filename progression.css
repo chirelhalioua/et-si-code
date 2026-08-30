@@ -496,24 +496,40 @@ button {
 
 
 .account-panel.is-connected {
-  width: min(100%, 760px);
-  padding: 14px 16px;
+  width: 100%;
+  padding: 16px 20px;
 
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
-  gap: 18px;
+  grid-template-columns: minmax(220px, 1fr) minmax(420px, 520px);
+  gap: 28px;
 }
 
 
 .account-panel.is-connected .account-copy::before,
-.account-panel.is-connected .progress-kicker,
-.account-panel.is-connected .account-copy p {
+.account-panel.is-connected .progress-kicker {
   display: none;
 }
 
 
 .account-panel.is-connected .account-copy h2 {
-  margin: 0;
-  font-size: 14px;
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+
+.account-panel.is-connected .account-copy p {
+  max-width: 420px;
+  font-size: 10px;
+}
+
+
+.account-panel.is-connected .account-connected {
+  width: 100%;
+  justify-self: end;
+}
+
+
+.account-panel.is-connected .account-message.success {
+  display: none;
 }
 
 
@@ -1173,6 +1189,11 @@ button {
     width: 36px;
     min-height: 36px;
     border-radius: 10px;
+  }
+
+  .account-panel.is-connected {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.95fr);
+    gap: 14px;
   }
 }
 
