@@ -46,7 +46,10 @@ const STORAGE_KEYS = {
     "etsi-game-progress",
 
   sessionProgress:
-    "etsi-session-progress"
+    "etsi-session-progress",
+
+  gameHistory:
+    "etsi-game-history"
 
 };
 
@@ -296,6 +299,10 @@ let sessionAnswers =
   [];
 
 
+let currentSessionId =
+  createSessionId();
+
+
 
 // =============================================================
 // 6. UTILITAIRE LOCAL STORAGE
@@ -331,6 +338,23 @@ function readStorage(
     return fallback;
 
   }
+
+}
+
+
+function createSessionId() {
+
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+
+    return crypto.randomUUID();
+
+  }
+
+
+  return `partie-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 }
 
@@ -912,6 +936,8 @@ function saveSessionProgress() {
     localStorage.setItem(
       STORAGE_KEYS.sessionProgress,
       JSON.stringify({
+        sessionId:
+          currentSessionId,
         score: sessionScore,
         completedSituationIndexes,
         sessionAnswers
@@ -952,6 +978,13 @@ function loadSessionProgress() {
 
     const saved =
       JSON.parse(raw);
+
+
+    currentSessionId =
+      typeof saved.sessionId === "string" &&
+      saved.sessionId.trim()
+        ? saved.sessionId
+        : createSessionId();
 
 
     sessionScore =
@@ -995,6 +1028,7 @@ function loadSessionProgress() {
       );
 
 
+    saveSessionProgress();
     renderSessionProgress();
 
   }
@@ -1004,6 +1038,8 @@ function loadSessionProgress() {
     sessionScore = 0;
     completedSituationIndexes = [];
     sessionAnswers = [];
+    currentSessionId =
+      createSessionId();
     renderSessionProgress();
 
   }
@@ -1016,6 +1052,8 @@ function resetSessionProgress() {
   sessionScore = 0;
   completedSituationIndexes = [];
   sessionAnswers = [];
+  currentSessionId =
+    createSessionId();
 
 
   try {
@@ -1037,6 +1075,119 @@ function resetSessionProgress() {
 
 
   renderSessionProgress();
+
+}
+
+
+function loadGameHistory() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        STORAGE_KEYS.gameHistory
+      );
+
+
+    const history =
+      raw
+        ? JSON.parse(raw)
+        : [];
+
+
+    return Array.isArray(history)
+      ? history.filter(
+          result =>
+            result &&
+            typeof result.sessionId === "string" &&
+            Number.isInteger(result.score) &&
+            Number.isInteger(result.total)
+        )
+      : [];
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Impossible de charger l’historique :",
+      error
+    );
+
+
+    return [];
+
+  }
+
+}
+
+
+function recordSessionResult(
+  score,
+  total
+) {
+
+  const history =
+    loadGameHistory();
+
+
+  const alreadyRecorded =
+    history.some(
+      result =>
+        result.sessionId ===
+        currentSessionId
+    );
+
+
+  if (!alreadyRecorded) {
+
+    history.push({
+      sessionId:
+        currentSessionId,
+      score,
+      total,
+      percentage:
+        total > 0
+          ? Math.round(
+              (score / total) * 100
+            )
+          : 0,
+      completedAt:
+        new Date().toISOString()
+    });
+
+
+    const limitedHistory =
+      history.slice(-50);
+
+
+    try {
+
+      localStorage.setItem(
+        STORAGE_KEYS.gameHistory,
+        JSON.stringify(
+          limitedHistory
+        )
+      );
+
+    }
+
+    catch (error) {
+
+      console.warn(
+        "Impossible d’enregistrer l’historique :",
+        error
+      );
+
+    }
+
+
+    return limitedHistory;
+
+  }
+
+
+  return history;
 
 }
 
@@ -2983,6 +3134,58 @@ function showSessionSummary() {
       : 0;
 
 
+  const gameHistory =
+    total > 0
+      ? recordSessionResult(
+          sessionScore,
+          total
+        )
+      : loadGameHistory();
+
+
+  const bestResult =
+    gameHistory.reduce(
+      (best, result) =>
+        !best ||
+        result.percentage > best.percentage
+          ? result
+          : best,
+      null
+    );
+
+
+  const averagePercentage =
+    gameHistory.length > 0
+      ? Math.round(
+          gameHistory.reduce(
+            (sum, result) =>
+              sum + result.percentage,
+            0
+          ) / gameHistory.length
+        )
+      : 0;
+
+
+  const recentResults =
+    gameHistory.slice(-5);
+
+
+  const recentBars =
+    recentResults
+      .map(
+        (result, index) => `
+          <span
+            class="session-history-bar"
+            title="Partie ${gameHistory.length - recentResults.length + index + 1} : ${result.score}/${result.total}"
+            aria-label="${result.score} sur ${result.total}"
+          >
+            <i style="--history-percent: ${result.percentage}"></i>
+          </span>
+        `
+      )
+      .join("");
+
+
   let resultIcon =
     "↻";
 
@@ -3090,6 +3293,30 @@ function showSessionSummary() {
         <div class="session-result-dots" aria-label="${sessionScore} bonnes réponses et ${total - sessionScore} erreurs">
           ${scoreDots}
         </div>
+
+        <section class="session-history" aria-label="Progression globale">
+          <div class="session-history-metrics">
+            <span>
+              <small>Parties</small>
+              <strong>${gameHistory.length}</strong>
+            </span>
+            <span>
+              <small>Meilleur</small>
+              <strong>${bestResult ? `${bestResult.score}/${bestResult.total}` : "—"}</strong>
+            </span>
+            <span>
+              <small>Moyenne</small>
+              <strong>${averagePercentage}%</strong>
+            </span>
+          </div>
+
+          <div class="session-history-recent">
+            <small>5 dernières</small>
+            <div class="session-history-bars">
+              ${recentBars}
+            </div>
+          </div>
+        </section>
 
         <div class="session-result-detail" aria-live="polite" hidden>
           <div class="session-result-detail-head">
