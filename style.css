@@ -307,6 +307,63 @@ button {
 }
 
 
+.game-nav {
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+
+.header-actions > .game-nav:hover {
+  transform: none;
+  border-color: var(--line-light);
+  background: var(--panel-light);
+}
+
+
+.game-nav a {
+  min-height: 36px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border-radius: 10px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  transition:
+    background 0.16s ease,
+    color 0.16s ease;
+}
+
+
+.game-nav a:hover {
+  color: var(--text);
+  background: var(--panel-hover);
+}
+
+
+.game-nav a.is-active {
+  color: #11151a;
+  background: var(--yellow);
+}
+
+
+.game-nav-icon {
+  display: none;
+  font-size: 14px;
+  line-height: 1;
+}
+
+
 
 /* thème situation */
 
@@ -2541,6 +2598,39 @@ and
   }
 
 
+  .header-actions {
+    gap: 7px;
+  }
+
+
+  .game-nav {
+    padding: 3px;
+    gap: 2px;
+  }
+
+
+  .game-nav a {
+    width: 31px;
+    min-height: 31px;
+    padding: 0;
+  }
+
+
+  .game-nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+
+  .game-nav-icon {
+    display: inline;
+  }
+
+
   .game-card {
     display: flex;
 
@@ -2761,6 +2851,16 @@ and (max-width: 1180px) {
   .brand-copy span,
   .category-chip {
     display: none;
+  }
+
+
+  .game-nav a.is-active {
+    display: none;
+  }
+
+
+  .game-nav a {
+    width: 29px;
   }
 
 
