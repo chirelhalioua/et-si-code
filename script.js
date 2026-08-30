@@ -2020,6 +2020,24 @@ function renderStep() {
   }
 
 
+  if (text) {
+
+    text.classList.remove(
+      "is-session-summary-title"
+    );
+
+  }
+
+
+  if (choices) {
+
+    choices.classList.remove(
+      "has-session-summary"
+    );
+
+  }
+
+
   const allScenes =
     currentSituation
       ?.scenes;
@@ -2879,17 +2897,79 @@ function showSessionSummary() {
       : 0;
 
 
+  let resultIcon =
+    "↻";
+
+
+  let resultMessage =
+    "Encore un peu d’entraînement";
+
+
+  if (percentage >= 80) {
+
+    resultIcon = "🏆";
+    resultMessage =
+      "Excellente conduite !";
+
+  }
+
+  else if (percentage >= 50) {
+
+    resultIcon = "★";
+    resultMessage =
+      "Tu es sur la bonne route !";
+
+  }
+
+
   if (text) {
 
     text.textContent =
-      `Partie terminée : ${sessionScore} bonne${sessionScore > 1 ? "s" : ""} réponse${sessionScore > 1 ? "s" : ""} sur ${total}, soit ${percentage} % de réussite.`;
+      "Résultat de ta partie";
+
+
+    text.classList.add(
+      "is-session-summary-title"
+    );
 
   }
 
 
   if (choices) {
 
-    choices.innerHTML = "";
+    const scoreDots =
+      Array.from(
+        { length: total },
+        (_, index) =>
+          `<span class="session-result-dot ${index < sessionScore ? "is-correct" : "is-incorrect"}" aria-hidden="true"></span>`
+      )
+        .join("");
+
+
+    choices.classList.add(
+      "has-session-summary"
+    );
+
+
+    choices.innerHTML = `
+      <section class="session-summary" aria-label="Résultat final : ${sessionScore} sur ${total}">
+        <div class="session-result-ring" style="--score-percent: ${percentage}" role="img" aria-label="${percentage} % de réussite">
+          <div class="session-result-ring-center">
+            <span class="session-result-icon" aria-hidden="true">${resultIcon}</span>
+            <strong>${sessionScore}<small>/${total}</small></strong>
+          </div>
+        </div>
+
+        <div class="session-result-copy">
+          <strong>${resultMessage}</strong>
+          <span>${sessionScore} bonne${sessionScore !== 1 ? "s" : ""} réponse${sessionScore !== 1 ? "s" : ""} · ${total - sessionScore} erreur${total - sessionScore !== 1 ? "s" : ""}</span>
+        </div>
+
+        <div class="session-result-dots" aria-label="${sessionScore} bonnes réponses et ${total - sessionScore} erreurs">
+          ${scoreDots}
+        </div>
+      </section>
+    `;
 
   }
 
