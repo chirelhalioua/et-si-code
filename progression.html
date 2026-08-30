@@ -41,7 +41,22 @@
       </a>
 
       <div class="progress-header-actions">
-        <a class="back-game" href="jeu.html">← Retour au jeu</a>
+        <nav class="progress-nav" aria-label="Navigation principale">
+          <a href="index.html">
+            <span class="progress-nav-icon" aria-hidden="true">⌂</span>
+            <span class="progress-nav-label">Accueil</span>
+          </a>
+
+          <a href="jeu.html">
+            <span class="progress-nav-icon" aria-hidden="true">▶</span>
+            <span class="progress-nav-label">Jouer</span>
+          </a>
+
+          <a class="is-active" href="progression.html" aria-current="page">
+            <span class="progress-nav-icon" aria-hidden="true">↗</span>
+            <span class="progress-nav-label">Progression</span>
+          </a>
+        </nav>
 
         <button
           id="progress-theme-toggle"
