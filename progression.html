@@ -124,6 +124,38 @@
             <button id="account-login" type="submit">Se connecter</button>
             <button id="account-signup" type="button">Créer mon compte</button>
           </div>
+
+          <button id="account-forgot-password" class="account-forgot-password" type="button">
+            Mot de passe oublié ?
+          </button>
+        </form>
+
+        <form id="password-reset-form" class="password-reset-form" hidden>
+          <strong>Choisis un nouveau mot de passe</strong>
+
+          <label>
+            Nouveau mot de passe
+            <input
+              id="new-password"
+              type="password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+          </label>
+
+          <label>
+            Confirmer le mot de passe
+            <input
+              id="confirm-new-password"
+              type="password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+          </label>
+
+          <button type="submit">Enregistrer mon nouveau mot de passe</button>
         </form>
 
         <div id="account-connected" class="account-connected" hidden>
@@ -196,9 +228,9 @@
 
       <section id="progress-empty" class="progress-empty" hidden>
         <span aria-hidden="true">↗</span>
-        <h2>Ta progression commencera bientôt</h2>
-        <p>Termine une première tentative de 10 questions pour afficher tes résultats.</p>
-        <a href="jeu.html">Commencer une tentative →</a>
+        <h2 id="progress-empty-title">Ta progression commencera bientôt</h2>
+        <p id="progress-empty-text">Termine une première tentative de 10 questions pour afficher tes résultats.</p>
+        <a id="progress-empty-action" href="jeu.html">Commencer une tentative →</a>
       </section>
     </main>
 
