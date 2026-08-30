@@ -292,6 +292,10 @@ let completedSituationIndexes =
   [];
 
 
+let sessionAnswers =
+  [];
+
+
 
 // =============================================================
 // 6. UTILITAIRE LOCAL STORAGE
@@ -909,7 +913,8 @@ function saveSessionProgress() {
       STORAGE_KEYS.sessionProgress,
       JSON.stringify({
         score: sessionScore,
-        completedSituationIndexes
+        completedSituationIndexes,
+        sessionAnswers
       })
     );
 
@@ -970,6 +975,19 @@ function loadSessionProgress() {
         : [];
 
 
+    sessionAnswers =
+      Array.isArray(saved.sessionAnswers)
+        ? saved.sessionAnswers
+            .filter(
+              answer =>
+                answer &&
+                typeof answer === "object" &&
+                typeof answer.question === "string"
+            )
+            .slice(0, situations.length)
+        : [];
+
+
     sessionScore =
       Math.min(
         sessionScore,
@@ -985,6 +1003,7 @@ function loadSessionProgress() {
 
     sessionScore = 0;
     completedSituationIndexes = [];
+    sessionAnswers = [];
     renderSessionProgress();
 
   }
@@ -996,6 +1015,7 @@ function resetSessionProgress() {
 
   sessionScore = 0;
   completedSituationIndexes = [];
+  sessionAnswers = [];
 
 
   try {
@@ -2623,6 +2643,36 @@ function validateAnswer() {
     true;
 
 
+  const correction =
+    getCorrectionText(
+      selectedOption
+    );
+
+
+  const currentScene =
+    currentSituation
+      ?.scenes
+      ?.[currentStep];
+
+
+  const correctOption =
+    Array.isArray(
+      currentScene?.options
+    )
+      ? currentScene.options.find(
+          option =>
+            option.correct === true
+        )
+      : null;
+
+
+  const getOptionLabel =
+    option =>
+      option?.label ||
+      option?.text ||
+      "Réponse non disponible";
+
+
   if (
     !completedSituationIndexes
       .includes(currentSituationIndex)
@@ -2638,6 +2688,30 @@ function validateAnswer() {
       sessionScore++;
 
     }
+
+
+    sessionAnswers.push({
+      situationIndex:
+        currentSituationIndex,
+      title:
+        currentSituation?.title ||
+        `Situation ${sessionAnswers.length + 1}`,
+      question:
+        currentScene?.text ||
+        text?.textContent ||
+        "Question non disponible",
+      selectedAnswer:
+        getOptionLabel(
+          selectedOption
+        ),
+      correctAnswer:
+        getOptionLabel(
+          correctOption
+        ),
+      correct:
+        selectedOption.correct === true,
+      correction
+    });
 
 
     saveSessionProgress();
@@ -2733,12 +2807,6 @@ function validateAnswer() {
   /*
    * EXPLICATION
    */
-
-  const correction =
-    getCorrectionText(
-      selectedOption
-    );
-
 
   if (text) {
 
@@ -2940,8 +3008,30 @@ function showSessionSummary() {
     const scoreDots =
       Array.from(
         { length: total },
-        (_, index) =>
-          `<span class="session-result-dot ${index < sessionScore ? "is-correct" : "is-incorrect"}" aria-hidden="true"></span>`
+        (_, index) => {
+
+          const answer =
+            sessionAnswers[index];
+
+
+          const isCorrect =
+            answer
+              ? answer.correct === true
+              : index < sessionScore;
+
+
+          return `
+            <button
+              class="session-result-dot ${isCorrect ? "is-correct" : "is-incorrect"}"
+              type="button"
+              data-answer-index="${index}"
+              aria-label="Voir la question ${index + 1}"
+              aria-pressed="false"
+              ${answer ? "" : "disabled"}
+            ></button>
+          `;
+
+        }
       )
         .join("");
 
@@ -2968,8 +3058,129 @@ function showSessionSummary() {
         <div class="session-result-dots" aria-label="${sessionScore} bonnes réponses et ${total - sessionScore} erreurs">
           ${scoreDots}
         </div>
+
+        <div class="session-result-detail" aria-live="polite" hidden>
+          <div class="session-result-detail-head">
+            <strong class="session-result-detail-number"></strong>
+            <span class="session-result-detail-status"></span>
+          </div>
+          <p class="session-result-detail-question"></p>
+          <dl>
+            <div>
+              <dt>Ta réponse</dt>
+              <dd class="session-result-detail-selected"></dd>
+            </div>
+            <div>
+              <dt>Bonne réponse</dt>
+              <dd class="session-result-detail-correct"></dd>
+            </div>
+          </dl>
+          <p class="session-result-detail-correction"></p>
+        </div>
       </section>
     `;
+
+
+    const detail =
+      choices.querySelector(
+        ".session-result-detail"
+      );
+
+
+    choices
+      .querySelectorAll(
+        ".session-result-dot:not(:disabled)"
+      )
+      .forEach(
+        dot => {
+
+          dot.addEventListener(
+            "click",
+            () => {
+
+              const answerIndex =
+                Number(
+                  dot.dataset.answerIndex
+                );
+
+
+              const answer =
+                sessionAnswers[answerIndex];
+
+
+              if (!answer || !detail) {
+
+                return;
+
+              }
+
+
+              choices
+                .querySelectorAll(
+                  ".session-result-dot"
+                )
+                .forEach(
+                  item =>
+                    item.setAttribute(
+                      "aria-pressed",
+                      String(item === dot)
+                    )
+                );
+
+
+              detail.hidden = false;
+              detail.classList.toggle(
+                "is-correct",
+                answer.correct === true
+              );
+              detail.classList.toggle(
+                "is-incorrect",
+                answer.correct !== true
+              );
+
+
+              detail.querySelector(
+                ".session-result-detail-number"
+              ).textContent =
+                `Question ${answerIndex + 1}`;
+
+
+              detail.querySelector(
+                ".session-result-detail-status"
+              ).textContent =
+                answer.correct
+                  ? "Bonne réponse"
+                  : "Mauvaise réponse";
+
+
+              detail.querySelector(
+                ".session-result-detail-question"
+              ).textContent =
+                answer.question;
+
+
+              detail.querySelector(
+                ".session-result-detail-selected"
+              ).textContent =
+                answer.selectedAnswer;
+
+
+              detail.querySelector(
+                ".session-result-detail-correct"
+              ).textContent =
+                answer.correctAnswer;
+
+
+              detail.querySelector(
+                ".session-result-detail-correction"
+              ).textContent =
+                answer.correction;
+
+            }
+          );
+
+        }
+      );
 
   }
 
