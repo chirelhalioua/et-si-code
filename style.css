@@ -1020,6 +1020,13 @@ html[data-theme="light"] .theme-moon {
 }
 
 
+.session-history-title {
+  color: var(--text);
+  font-size: 10px;
+  text-align: center;
+}
+
+
 .session-history-metrics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1101,6 +1108,37 @@ html[data-theme="light"] .theme-moon {
   border-radius: inherit;
 
   background: var(--yellow);
+}
+
+
+.global-progress-link {
+  min-height: 34px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid var(--line-light);
+  border-radius: 999px;
+
+  color: var(--text);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
+}
+
+
+.global-progress-link:hover {
+  transform: translateY(-1px);
+  border-color: var(--yellow);
+  color: var(--yellow);
 }
 
 
@@ -3329,6 +3367,12 @@ and (min-width: 500px) {
     height: 20px;
   }
 
+
+  .global-progress-link {
+    min-height: 30px;
+    font-size: 9px;
+  }
+
 }
 
 
@@ -3418,9 +3462,20 @@ and (min-width: 500px) {
   }
 
 
+  .session-history-title {
+    display: none;
+  }
+
+
   .session-history-bars,
   .session-history-bar {
     height: 18px;
+  }
+
+
+  .global-progress-link {
+    grid-column: 1 / -1;
+    min-height: 27px;
   }
 
 }
