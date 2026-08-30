@@ -2195,6 +2195,48 @@ and (max-width: 950px) {
 
 
 /* =========================================================
+   TABLETTE EN PAYSAGE
+========================================================= */
+
+@media
+(orientation: landscape)
+and (min-width: 951px)
+and (max-width: 1180px) {
+
+  .quiz-top {
+    gap: 8px;
+  }
+
+
+  .player-block {
+    min-width: 0;
+    gap: 9px;
+  }
+
+
+  .game-stats {
+    gap: 5px;
+  }
+
+
+  .game-stat {
+    min-width: 72px;
+    padding: 6px 7px;
+  }
+
+
+  .audio-button {
+    min-height: 38px;
+    padding: 0 10px;
+    gap: 5px;
+    flex: 0 0 auto;
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
