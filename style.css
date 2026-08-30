@@ -1060,6 +1060,11 @@ html[data-theme="light"] .theme-moon {
 }
 
 
+.session-history-recent > small {
+  white-space: nowrap;
+}
+
+
 .session-history-bars {
   height: 25px;
 
