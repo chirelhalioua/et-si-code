@@ -2206,6 +2206,13 @@ and
 
 
   .audio-button {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+
+    width: auto;
+    max-width: max-content;
+
     min-height: 32px;
 
     padding: 0 10px;
