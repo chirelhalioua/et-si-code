@@ -43,7 +43,10 @@ const STORAGE_KEYS = {
     "etsi-theme",
 
   gameProgress:
-    "etsi-game-progress"
+    "etsi-game-progress",
+
+  sessionProgress:
+    "etsi-session-progress"
 
 };
 
@@ -123,6 +126,18 @@ const progressSteps =
       ".progress-step"
     )
   ];
+
+
+const sessionScoreDisplay =
+  document.getElementById(
+    "session-score"
+  );
+
+
+const sessionProgressDisplay =
+  document.getElementById(
+    "session-progress"
+  );
 
 
 const themeButton =
@@ -267,6 +282,14 @@ let correctionDisplayed =
 
 let audioEnabled =
   true;
+
+
+let sessionScore =
+  0;
+
+
+let completedSituationIndexes =
+  [];
 
 
 
@@ -814,32 +837,30 @@ async function loadSituations() {
 
 function getRandomSituationIndex() {
 
-  if (
-    situations.length <= 1
-  ) {
-
-    return 0;
-
-  }
-
-
-  let index;
-
-
-  do {
-
-    index =
-      Math.floor(
-        Math.random() *
-        situations.length
+  const availableIndexes =
+    situations
+      .map((_, index) => index)
+      .filter(
+        index =>
+          !completedSituationIndexes
+            .includes(index)
       );
 
+
+  if (availableIndexes.length === 0) {
+
+    return -1;
+
   }
 
-  while (
-    index ===
-    lastSituationIndex
-  );
+
+  const index =
+    availableIndexes[
+      Math.floor(
+        Math.random() *
+        availableIndexes.length
+      )
+    ];
 
 
   lastSituationIndex =
@@ -847,6 +868,155 @@ function getRandomSituationIndex() {
 
 
   return index;
+
+}
+
+
+
+// =============================================================
+// 16 BIS. SCORE ET PROGRESSION DE LA PARTIE
+// =============================================================
+
+function renderSessionProgress() {
+
+  const total =
+    situations.length || 10;
+
+
+  if (sessionScoreDisplay) {
+
+    sessionScoreDisplay.textContent =
+      `${sessionScore} / ${total}`;
+
+  }
+
+
+  if (sessionProgressDisplay) {
+
+    sessionProgressDisplay.textContent =
+      `${completedSituationIndexes.length} / ${total}`;
+
+  }
+
+}
+
+
+function saveSessionProgress() {
+
+  try {
+
+    localStorage.setItem(
+      STORAGE_KEYS.sessionProgress,
+      JSON.stringify({
+        score: sessionScore,
+        completedSituationIndexes
+      })
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Impossible de sauvegarder le score :",
+      error
+    );
+
+  }
+
+}
+
+
+function loadSessionProgress() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        STORAGE_KEYS.sessionProgress
+      );
+
+
+    if (!raw) {
+
+      renderSessionProgress();
+      return;
+
+    }
+
+
+    const saved =
+      JSON.parse(raw);
+
+
+    sessionScore =
+      Number.isInteger(saved.score)
+        ? Math.max(0, saved.score)
+        : 0;
+
+
+    completedSituationIndexes =
+      Array.isArray(
+        saved.completedSituationIndexes
+      )
+        ? saved.completedSituationIndexes
+            .filter(
+              (index, position, list) =>
+                Number.isInteger(index) &&
+                index >= 0 &&
+                index < situations.length &&
+                list.indexOf(index) === position
+            )
+        : [];
+
+
+    sessionScore =
+      Math.min(
+        sessionScore,
+        completedSituationIndexes.length
+      );
+
+
+    renderSessionProgress();
+
+  }
+
+  catch (error) {
+
+    sessionScore = 0;
+    completedSituationIndexes = [];
+    renderSessionProgress();
+
+  }
+
+}
+
+
+function resetSessionProgress() {
+
+  sessionScore = 0;
+  completedSituationIndexes = [];
+
+
+  try {
+
+    localStorage.removeItem(
+      STORAGE_KEYS.sessionProgress
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Impossible de réinitialiser le score :",
+      error
+    );
+
+  }
+
+
+  renderSessionProgress();
 
 }
 
@@ -1750,6 +1920,14 @@ function startNewSituation() {
     getRandomSituationIndex();
 
 
+  if (currentSituationIndex === -1) {
+
+    showSessionSummary();
+    return;
+
+  }
+
+
   currentSituation =
     situations[
       currentSituationIndex
@@ -2427,6 +2605,29 @@ function validateAnswer() {
     true;
 
 
+  if (
+    !completedSituationIndexes
+      .includes(currentSituationIndex)
+  ) {
+
+    completedSituationIndexes.push(
+      currentSituationIndex
+    );
+
+
+    if (selectedOption.correct === true) {
+
+      sessionScore++;
+
+    }
+
+
+    saveSessionProgress();
+    renderSessionProgress();
+
+  }
+
+
   const allButtons =
     document.querySelectorAll(
       ".choice"
@@ -2546,9 +2747,18 @@ function validateAnswer() {
    * NOUVELLE SITUATION
    */
 
+  const sessionFinished =
+    completedSituationIndexes.length >=
+    situations.length;
+
+
   setActionButton(
-    "Nouvelle situation",
-    "new"
+    sessionFinished
+      ? "Voir mon résultat"
+      : "Nouvelle situation",
+    sessionFinished
+      ? "results"
+      : "new"
   );
 
 
@@ -2624,6 +2834,78 @@ function handleMainAction() {
   ) {
 
     startNewSituation();
+
+  }
+
+
+  if (
+    mode === "results"
+  ) {
+
+    showSessionSummary();
+
+  }
+
+
+  if (
+    mode === "restart"
+  ) {
+
+    clearGameProgress();
+    resetSessionProgress();
+    startNewSituation();
+
+  }
+
+}
+
+
+
+// =============================================================
+// 28 BIS. RÉSUMÉ SIMPLE DE FIN DE PARTIE
+// =============================================================
+
+function showSessionSummary() {
+
+  const total =
+    situations.length;
+
+
+  const percentage =
+    total > 0
+      ? Math.round(
+          (sessionScore / total) * 100
+        )
+      : 0;
+
+
+  if (text) {
+
+    text.textContent =
+      `Partie terminée : ${sessionScore} bonne${sessionScore > 1 ? "s" : ""} réponse${sessionScore > 1 ? "s" : ""} sur ${total}, soit ${percentage} % de réussite.`;
+
+  }
+
+
+  if (choices) {
+
+    choices.innerHTML = "";
+
+  }
+
+
+  clearGameProgress();
+
+
+  setActionButton(
+    "Recommencer une partie",
+    "restart"
+  );
+
+
+  if (actionButton) {
+
+    actionButton.disabled = false;
 
   }
 
@@ -3047,6 +3329,9 @@ async function init() {
 
 
     await loadSituations();
+
+
+    loadSessionProgress();
 
 
     /*
