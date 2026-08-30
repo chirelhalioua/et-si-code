@@ -1468,7 +1468,7 @@ html[data-theme="light"] .theme-moon {
   gap: 20px;
 
   background:
-    #0b1119;
+    var(--panel);
 }
 
 
@@ -1484,7 +1484,7 @@ html[data-theme="light"] .theme-moon {
   gap: 8px;
 
   color:
-    #ffffff;
+    var(--text);
 }
 
 
@@ -1536,7 +1536,7 @@ html[data-theme="light"] .theme-moon {
   justify-self: center;
 
   color:
-    #8090a4;
+    var(--text-muted);
 
   font-size: 13px;
 
@@ -1552,7 +1552,7 @@ html[data-theme="light"] .theme-moon {
   justify-self: end;
 
   color:
-    #8090a4;
+    var(--text-muted);
 
   font-size: 13px;
 
