@@ -107,9 +107,12 @@
           <strong id="global-average">0%</strong>
         </article>
 
-        <article>
+        <article class="global-best-card">
           <span>Meilleur résultat</span>
-          <strong id="global-best">—</strong>
+          <div id="global-best-ring" class="global-score-ring" style="--score-percent: 0">
+            <span class="score-ring-icon" aria-hidden="true">★</span>
+            <strong id="global-best">—</strong>
+          </div>
         </article>
       </section>
 
@@ -134,9 +137,35 @@
       </section>
     </main>
 
-    <footer class="progress-footer">
-      <span>Les résultats sont enregistrés sur cet appareil.</span>
-      <a href="index.html">ET SI ?</a>
+    <div class="footer-road-message">
+      <span class="footer-road-line" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+
+      <strong>Bonne route</strong>
+      <span aria-hidden="true">💛</span>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <a class="footer-logo-main" href="index.html" aria-label="Accueil ET SI ?">
+          <span class="footer-logo-text">ET SI</span>
+          <span class="footer-logo-badge">?</span>
+        </a>
+      </div>
+
+      <p>Observe · Anticipe · Décide</p>
+
+      <p class="footer-credit">
+        Développé avec 💛 par
+        <a
+          href="https://chirelhalioua.fr/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Chirel</a>
+      </p>
     </footer>
   </div>
 </body>
