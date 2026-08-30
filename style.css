@@ -2202,6 +2202,17 @@ and
   }
 
 
+  .audio-button {
+    min-height: 32px;
+
+    padding: 0 10px;
+
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+
   .game-progress {
     min-width: 82px;
 
@@ -2498,11 +2509,13 @@ and (min-width: 500px) {
     grid-row: 1;
     justify-self: end;
 
-    min-height: 30px;
+    min-height: 25px;
 
-    padding: 0 9px;
+    padding: 0 7px;
 
-    font-size: 10px;
+    gap: 4px;
+
+    font-size: 8px;
   }
 
 
