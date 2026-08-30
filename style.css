@@ -2146,6 +2146,55 @@ and
 
 
 /* =========================================================
+   TABLETTE EN PORTRAIT
+========================================================= */
+
+@media
+(orientation: portrait)
+and (min-width: 651px)
+and (max-width: 950px) {
+
+  .quiz-panel {
+    min-height: 0;
+    padding: 16px 18px;
+  }
+
+
+  .quiz-divider {
+    margin: 12px 0;
+  }
+
+
+  .question-text {
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+
+
+  .choices {
+    gap: 8px;
+  }
+
+
+  .choice {
+    min-height: 56px;
+  }
+
+
+  .choice-label {
+    padding: 9px 12px;
+  }
+
+
+  .main-action {
+    min-height: 46px;
+    margin-top: 9px;
+  }
+
+}
+
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
