@@ -95,7 +95,7 @@ de la complexité de la situation ;
 de la proximité entre plusieurs réponses possibles.
 🏆 Système de progression et de récompenses
 
-Créer un système permettant au joueur de savoir où il se situe.
+## Créer un système permettant au joueur de savoir où il se situe.
 
 Par exemple :
 
