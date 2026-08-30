@@ -1167,7 +1167,7 @@ function recordSessionResult(
 
   if (!alreadyRecorded) {
 
-    history.push({
+    const result = {
       sessionId:
         currentSessionId,
       seriesId:
@@ -1184,7 +1184,10 @@ function recordSessionResult(
           : 0,
       completedAt:
         new Date().toISOString()
-    });
+    };
+
+
+    history.push(result);
 
 
     const limitedHistory =
@@ -1210,6 +1213,20 @@ function recordSessionResult(
       );
 
     }
+
+
+    window.ETSISync
+      ?.uploadAttempt(result)
+      .catch(
+        error => {
+
+          console.warn(
+            "La tentative sera synchronisée plus tard :",
+            error
+          );
+
+        }
+      );
 
 
     return limitedHistory;
@@ -3924,6 +3941,26 @@ async function init() {
 
 
     renderPlayer();
+
+
+    if (window.ETSISync) {
+
+      try {
+
+        await window.ETSISync.syncHistory();
+
+      }
+
+      catch (error) {
+
+        console.warn(
+          "Synchronisation momentanément indisponible :",
+          error
+        );
+
+      }
+
+    }
 
 
     if (text) {
