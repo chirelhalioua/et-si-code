@@ -665,80 +665,6 @@ document.addEventListener(
 
 
 // =============================================================
-// NAVIGATION FLUIDE VERS LES SECTIONS
-// =============================================================
-
-const internalLinks =
-  document.querySelectorAll(
-    'a[href^="#"]'
-  );
-
-
-internalLinks.forEach(
-  link => {
-
-    link.addEventListener(
-      "click",
-      event => {
-
-        const targetId =
-          link.getAttribute("href");
-
-
-        if (
-          !targetId ||
-          targetId === "#"
-        ) {
-          return;
-        }
-
-
-        const targetSection =
-          document.querySelector(
-            targetId
-          );
-
-
-        if (!targetSection) {
-          return;
-        }
-
-
-        event.preventDefault();
-
-
-        const header =
-          document.querySelector(
-            ".site-header"
-          );
-
-
-        const headerHeight =
-          header
-            ? header.offsetHeight
-            : 0;
-
-
-        const targetTop =
-          targetSection.getBoundingClientRect().top +
-          window.scrollY -
-          headerHeight -
-          16;
-
-
-        window.scrollTo({
-          top: targetTop,
-          behavior: "smooth"
-        });
-
-      }
-    );
-
-  }
-);
-
-
-// =============================================================
 // EFFET HEADER AU SCROLL
 // =============================================================
 
@@ -817,50 +743,6 @@ window.addEventListener(
   }
 );
 
-
-// =============================================================
-// NAVIGATION FLUIDE VERS LES SECTIONS
-// =============================================================
-
-
-const internalLinks =
-  document.querySelectorAll('a[href^="#"]');
-
-internalLinks.forEach(link => {
-  link.addEventListener("click", event => {
-    const targetId = link.getAttribute("href");
-
-    if (!targetId || targetId === "#") {
-      return;
-    }
-
-    const targetSection =
-      document.querySelector(targetId);
-
-    if (!targetSection) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const header =
-      document.querySelector(".site-header");
-
-    const headerHeight =
-      header ? header.offsetHeight : 0;
-
-    const targetTop =
-      targetSection.getBoundingClientRect().top +
-      window.scrollY -
-      headerHeight -
-      16;
-
-    window.scrollTo({
-      top: targetTop,
-      behavior: "smooth"
-    });
-  });
-});
 
 // =============================================================
 // INITIALISATION
