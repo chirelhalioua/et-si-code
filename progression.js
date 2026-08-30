@@ -32,6 +32,28 @@ const seriesList =
   );
 
 
+const seriesFilter =
+  document.getElementById(
+    "series-filter"
+  );
+
+
+const seriesFilterNote =
+  document.getElementById(
+    "series-filter-note"
+  );
+
+
+const seriesFilterCount =
+  document.getElementById(
+    "series-filter-count"
+  );
+
+
+let availableSeries =
+  [];
+
+
 const emptyState =
   document.getElementById(
     "progress-empty"
@@ -285,6 +307,100 @@ function renderSeriesCard(series) {
 }
 
 
+function renderSeriesFilter(series) {
+
+  const hasSeveralSeries =
+    series.length > 1;
+
+
+  const disabledAttribute =
+    hasSeveralSeries
+      ? ""
+      : " disabled";
+
+
+  seriesFilter.innerHTML = `
+    <button
+      class="is-active"
+      type="button"
+      data-series-filter="all"
+      aria-pressed="true"
+      ${disabledAttribute}
+    >
+      Toutes les séries
+    </button>
+
+    ${series
+      .map(
+        item => `
+          <button
+            type="button"
+            data-series-filter="${escapeHtml(item.id)}"
+            aria-pressed="false"
+            ${disabledAttribute}
+          >
+            ${escapeHtml(item.title)}
+          </button>
+        `
+      )
+      .join("")}
+  `;
+
+
+  seriesFilterCount.textContent =
+    `${series.length} série${series.length > 1 ? "s" : ""} disponible${series.length > 1 ? "s" : ""}`;
+
+
+  seriesFilterNote.hidden =
+    hasSeveralSeries;
+
+}
+
+
+function applySeriesFilter(seriesId) {
+
+  const displayedSeries =
+    seriesId === "all"
+      ? availableSeries
+      : availableSeries.filter(
+          series =>
+            series.id === seriesId
+        );
+
+
+  seriesList.innerHTML =
+    displayedSeries
+      .map(renderSeriesCard)
+      .join("");
+
+
+  seriesFilter
+    .querySelectorAll("button")
+    .forEach(
+      button => {
+
+        const isActive =
+          button.dataset.seriesFilter ===
+          seriesId;
+
+
+        button.classList.toggle(
+          "is-active",
+          isActive
+        );
+
+
+        button.setAttribute(
+          "aria-pressed",
+          String(isActive)
+        );
+
+      }
+    );
+
+}
+
+
 function renderProgress() {
 
   const history =
@@ -301,6 +417,10 @@ function renderProgress() {
 
   const series =
     groupBySeries(history);
+
+
+  availableSeries =
+    series;
 
 
   const best =
@@ -339,16 +459,39 @@ function renderProgress() {
   );
 
 
-  seriesList.innerHTML =
-    series
-      .map(renderSeriesCard)
-      .join("");
+  renderSeriesFilter(series);
+  applySeriesFilter("all");
 
 
   globalSummary.hidden = false;
   seriesSection.hidden = false;
 
 }
+
+
+seriesFilter?.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "button[data-series-filter]"
+      );
+
+
+    if (!button || button.disabled) {
+
+      return;
+
+    }
+
+
+    applySeriesFilter(
+      button.dataset.seriesFilter
+    );
+
+  }
+);
 
 
 function updateThemeIcon() {
