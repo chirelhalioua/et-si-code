@@ -2037,14 +2037,35 @@ and
   }
 
 
-  .game-header {
-    grid-template-columns:
-      1fr auto;
+  .game-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-width: 100px;
+
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
   }
 
 
-  .game-progress {
-    display: none;
+  .game-header {
+    grid-template-columns:
+      auto 1fr auto;
+  }
+
+
+  .game-progress .progress-bar {
+    gap: 5px;
+  }
+
+
+  .game-progress .progress-step {
+    width: 23px;
+    height: 5px;
   }
 
 
@@ -2098,6 +2119,28 @@ and
 
   .game-header {
     min-height: 64px;
+
+    gap: 8px;
+  }
+
+
+  .game-progress {
+    min-width: 82px;
+
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+
+  .game-progress .progress-bar {
+    gap: 4px;
+  }
+
+
+  .game-progress .progress-step {
+    width: 18px;
+    height: 4px;
   }
 
 
