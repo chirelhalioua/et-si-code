@@ -326,6 +326,95 @@ button {
 }
 
 
+.account-forgot-password {
+  grid-column: 1 / -1;
+  justify-self: end;
+
+  padding: 2px 0;
+  border: 0;
+
+  background: transparent;
+  color: var(--text-muted);
+
+  font-size: 9px;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+
+.account-forgot-password:hover {
+  color: var(--yellow);
+}
+
+
+.password-reset-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+
+.password-reset-form[hidden] {
+  display: none;
+}
+
+
+.password-reset-form > strong,
+.password-reset-form > button {
+  grid-column: 1 / -1;
+}
+
+
+.password-reset-form > strong {
+  font-size: 12px;
+}
+
+
+.password-reset-form label {
+  display: grid;
+  gap: 5px;
+
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+
+.password-reset-form input {
+  width: 100%;
+  min-height: 39px;
+  padding: 0 11px;
+
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  outline: none;
+
+  background: var(--panel-light);
+  color: var(--text);
+}
+
+
+.password-reset-form input:focus {
+  border-color: var(--yellow);
+}
+
+
+.password-reset-form > button {
+  min-height: 39px;
+  border: 0;
+  border-radius: 10px;
+
+  background: var(--yellow);
+  color: #11151a;
+
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+
 .account-actions button,
 .account-connected button {
   min-height: 39px;
@@ -1081,6 +1170,15 @@ button {
 
   .account-form {
     grid-template-columns: 1fr;
+  }
+
+  .password-reset-form {
+    grid-template-columns: 1fr;
+  }
+
+  .password-reset-form > strong,
+  .password-reset-form > button {
+    grid-column: 1;
   }
 
   .account-actions {
