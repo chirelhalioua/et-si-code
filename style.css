@@ -308,24 +308,32 @@ button {
 
 
 .game-nav {
+  min-height: 0;
   padding: 4px;
 
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
+
+  border: 1px solid var(--line) !important;
+  border-radius: 14px !important;
+
+  background: var(--panel) !important;
+  box-shadow: none !important;
 }
 
 
 .header-actions > .game-nav:hover {
   transform: none;
-  border-color: var(--line-light);
-  background: var(--panel-light);
+  border-color: var(--line) !important;
+  background: var(--panel) !important;
+  box-shadow: none;
 }
 
 
 .game-nav a {
-  min-height: 36px;
-  padding: 0 10px;
+  min-height: 34px;
+  padding: 0 12px;
 
   display: inline-flex;
   align-items: center;
@@ -336,7 +344,7 @@ button {
 
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
 
   transition:
@@ -2618,13 +2626,15 @@ and
   .game-nav {
     padding: 3px;
     gap: 2px;
+    border-radius: 12px !important;
   }
 
 
   .game-nav a {
-    width: 31px;
-    min-height: 31px;
+    width: 34px;
+    min-height: 30px;
     padding: 0;
+    border-radius: 9px;
   }
 
 
@@ -2866,13 +2876,28 @@ and (max-width: 1180px) {
   }
 
 
-  .game-nav a.is-active {
-    display: none;
+  .game-nav a {
+    width: 29px;
   }
 
 
-  .game-nav a {
-    width: 29px;
+  .game-logo-text {
+    font-size: 18px;
+  }
+
+
+  .game-logo-question {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+
+  .theme-toggle,
+  .exit-game {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
   }
 
 
@@ -2894,10 +2919,10 @@ and (max-width: 1180px) {
 
   .theme-toggle,
   .exit-game {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
 
-    flex-basis: 42px;
+    flex-basis: 36px;
   }
 
 
@@ -3588,6 +3613,36 @@ and (min-width: 500px) {
   .global-progress-link {
     grid-column: 1 / -1;
     min-height: 27px;
+  }
+
+}
+
+
+@media (max-width: 340px) {
+
+  .game-logo-text {
+    display: none;
+  }
+
+
+  .game-brand {
+    gap: 0;
+  }
+
+
+  .game-progress {
+    min-width: 72px;
+  }
+
+
+  .game-header,
+  .header-actions {
+    gap: 4px;
+  }
+
+
+  .game-nav a {
+    width: 27px;
   }
 
 }
