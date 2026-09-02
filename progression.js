@@ -63,6 +63,24 @@ const mistakesCount =
   );
 
 
+const badgesSection =
+  document.getElementById(
+    "badges-section"
+  );
+
+
+const badgesList =
+  document.getElementById(
+    "badges-list"
+  );
+
+
+const badgesCount =
+  document.getElementById(
+    "badges-count"
+  );
+
+
 const seriesList =
   document.getElementById(
     "series-list"
@@ -461,6 +479,72 @@ function renderMistakes(mistakes) {
 }
 
 
+function renderBadges(history, mistakes) {
+
+  if (
+    !badgesSection ||
+    !badgesList ||
+    !badgesCount ||
+    !window.ETSIBadges
+  ) {
+
+    return;
+
+  }
+
+
+  if (history.length === 0) {
+
+    badgesSection.hidden = true;
+    badgesList.innerHTML = "";
+    return;
+
+  }
+
+
+  const badges =
+    window.ETSIBadges.evaluate(
+      history,
+      mistakes
+    );
+
+
+  const unlockedCount =
+    badges.filter(
+      badge => badge.unlocked
+    ).length;
+
+
+  badgesCount.textContent =
+    `${unlockedCount}/${badges.length} badges obtenus`;
+
+
+  badgesList.innerHTML =
+    badges
+      .map(
+        badge => `
+          <article class="badge-card ${badge.unlocked ? "is-unlocked" : "is-locked"}">
+            <span class="badge-icon" aria-hidden="true">
+              ${badge.unlocked ? badge.icon : "🔒"}
+            </span>
+            <div>
+              <strong>${escapeHtml(badge.name)}</strong>
+              <small>${escapeHtml(badge.description)}</small>
+            </div>
+            <span class="badge-status">
+              ${badge.unlocked ? "Obtenu" : "À débloquer"}
+            </span>
+          </article>
+        `
+      )
+      .join("");
+
+
+  badgesSection.hidden = false;
+
+}
+
+
 function groupBySeries(history) {
 
   const groups =
@@ -721,18 +805,25 @@ function renderProgress() {
   emptyState.hidden = true;
   globalSummary.hidden = true;
   seriesSection.hidden = true;
+  badgesSection.hidden = true;
 
   const mistakes =
     loadMistakes();
+
+
+  const history =
+    loadHistory();
 
 
   renderMistakes(
     mistakes
   );
 
-  const history =
-    loadHistory();
 
+  renderBadges(
+    history,
+    mistakes
+  );
 
   if (history.length === 0) {
 
