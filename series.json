@@ -1,0 +1,35 @@
+[
+  {
+    "id": "serie-generale-1",
+    "title": "Série 1 — Situations générales",
+    "description": "Piétons, intersections, dépassements, travaux et autoroute.",
+    "situationsFile": "situations.json",
+    "questionCount": 10,
+    "theme": "Situations générales",
+    "level": "Débutant",
+    "icon": "🚗",
+    "available": true
+  },
+  {
+    "id": "signalisation-panneaux",
+    "title": "Signalisation et panneaux",
+    "description": "Une nouvelle série consacrée aux panneaux et aux priorités.",
+    "situationsFile": "situations-signalisation.json",
+    "questionCount": 10,
+    "theme": "Signalisation",
+    "level": "Intermédiaire",
+    "icon": "🚦",
+    "available": false
+  },
+  {
+    "id": "priorites-intersections",
+    "title": "Priorités et intersections",
+    "description": "Des situations plus complexes pour maîtriser les règles de priorité.",
+    "situationsFile": "situations-priorites.json",
+    "questionCount": 10,
+    "theme": "Priorités",
+    "level": "Avancé",
+    "icon": "🛑",
+    "available": false
+  }
+]
