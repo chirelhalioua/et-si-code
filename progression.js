@@ -970,8 +970,25 @@ accountForgotPassword?.addEventListener(
 
     if (!accountEmail.value.trim()) {
 
+      setAccountMessage(
+        "Veuillez saisir votre adresse e-mail.",
+        "error"
+      );
+
       accountEmail.focus();
-      accountEmail.reportValidity();
+      return;
+
+    }
+
+
+    if (!accountEmail.checkValidity()) {
+
+      setAccountMessage(
+        "Veuillez saisir une adresse e-mail valide.",
+        "error"
+      );
+
+      accountEmail.focus();
       return;
 
     }
