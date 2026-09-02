@@ -2,6 +2,10 @@ const HISTORY_KEY =
   "etsi-game-history";
 
 
+const MISTAKES_KEY =
+  "etsi-game-mistakes";
+
+
 const THEME_KEY =
   "etsi-theme";
 
@@ -41,6 +45,24 @@ const seriesSection =
   );
 
 
+const mistakesSection =
+  document.getElementById(
+    "mistakes-section"
+  );
+
+
+const mistakesList =
+  document.getElementById(
+    "mistakes-list"
+  );
+
+
+const mistakesCount =
+  document.getElementById(
+    "mistakes-count"
+  );
+
+
 const seriesList =
   document.getElementById(
     "series-list"
@@ -75,6 +97,10 @@ let currentAccountUser =
 
 let isPasswordRecovery =
   false;
+
+
+let situationMetadata =
+  [];
 
 
 const emptyState =
@@ -279,6 +305,158 @@ function loadHistory() {
     return [];
 
   }
+
+}
+
+
+function loadMistakes() {
+
+  try {
+
+    const mistakes =
+      JSON.parse(
+        localStorage.getItem(
+          MISTAKES_KEY
+        ) || "[]"
+      );
+
+
+    return Array.isArray(mistakes)
+      ? mistakes.filter(
+          mistake =>
+            mistake &&
+            Number.isInteger(
+              mistake.situationIndex
+            )
+        )
+      : [];
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Impossible de charger les erreurs :",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+async function loadSituationMetadata() {
+
+  try {
+
+    const response =
+      await fetch(
+        "situations.json",
+        { cache: "no-store" }
+      );
+
+
+    if (!response.ok) {
+
+      return;
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    situationMetadata =
+      Array.isArray(data)
+        ? data
+        : [];
+
+
+    renderProgress();
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Informations des situations indisponibles :",
+      error
+    );
+
+  }
+
+}
+
+
+function renderMistakes(mistakes) {
+
+  if (
+    !mistakesSection ||
+    !mistakesList ||
+    !mistakesCount
+  ) {
+
+    return;
+
+  }
+
+
+  if (mistakes.length === 0) {
+
+    mistakesSection.hidden = true;
+    mistakesList.innerHTML = "";
+    return;
+
+  }
+
+
+  mistakesCount.textContent =
+    `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir`;
+
+
+  mistakesList.innerHTML =
+    mistakes
+      .map(
+        mistake => {
+
+          const situation =
+            situationMetadata[
+              mistake.situationIndex
+            ] || {};
+
+
+          const title =
+            situation.title ||
+            mistake.title ||
+            `Situation ${mistake.situationIndex + 1}`;
+
+
+          const category =
+            situation.category ||
+            "Code de la route";
+
+
+          return `
+            <article class="mistake-card">
+              <span class="mistake-number" aria-hidden="true">
+                ${mistake.situationIndex + 1}
+              </span>
+              <div>
+                <strong>${escapeHtml(title)}</strong>
+                <small>${escapeHtml(category)}</small>
+              </div>
+            </article>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  mistakesSection.hidden = false;
 
 }
 
@@ -544,13 +722,24 @@ function renderProgress() {
   globalSummary.hidden = true;
   seriesSection.hidden = true;
 
+  const mistakes =
+    loadMistakes();
+
+
+  renderMistakes(
+    mistakes
+  );
+
   const history =
     loadHistory();
 
 
   if (history.length === 0) {
 
-    if (currentAccountUser) {
+    if (
+      currentAccountUser &&
+      mistakes.length === 0
+    ) {
 
       renderEmptyState();
       emptyState.hidden = false;
@@ -1286,4 +1475,5 @@ themeToggle
 
 updateThemeIcon();
 renderProgress();
+loadSituationMetadata();
 synchronizeAccount();
