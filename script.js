@@ -55,7 +55,10 @@ const STORAGE_KEYS = {
     "etsi-session-progress",
 
   gameHistory:
-    "etsi-game-history"
+    "etsi-game-history",
+
+  mistakes:
+    "etsi-game-mistakes"
 
 };
 
@@ -309,6 +312,14 @@ let currentSessionId =
   createSessionId();
 
 
+let reviewMode =
+  false;
+
+
+let reviewSituationIndexes =
+  [];
+
+
 
 // =============================================================
 // 6. UTILITAIRE LOCAL STORAGE
@@ -361,6 +372,127 @@ function createSessionId() {
 
 
   return `tentative-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+}
+
+
+function loadMistakes() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        STORAGE_KEYS.mistakes
+      );
+
+
+    const mistakes =
+      raw ? JSON.parse(raw) : [];
+
+
+    return Array.isArray(mistakes)
+      ? mistakes.filter(
+          mistake =>
+            mistake &&
+            Number.isInteger(mistake.situationIndex) &&
+            mistake.situationIndex >= 0
+        )
+      : [];
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Impossible de charger les erreurs :",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+function saveMistakes(mistakes) {
+
+  const uniqueMistakes =
+    [...new Map(
+      mistakes.map(
+        mistake => [
+          mistake.situationIndex,
+          mistake
+        ]
+      )
+    ).values()];
+
+
+  try {
+
+    localStorage.setItem(
+      STORAGE_KEYS.mistakes,
+      JSON.stringify(uniqueMistakes)
+    );
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Impossible d’enregistrer les erreurs :",
+      error
+    );
+
+  }
+
+
+  return uniqueMistakes;
+
+}
+
+
+function rememberMistake(answer) {
+
+  const mistakes =
+    loadMistakes().filter(
+      mistake =>
+        mistake.situationIndex !==
+        answer.situationIndex
+    );
+
+
+  mistakes.push({
+    ...answer,
+    updatedAt:
+      new Date().toISOString()
+  });
+
+
+  saveMistakes(mistakes);
+
+}
+
+
+function forgetMistake(situationIndex) {
+
+  const mistakes =
+    loadMistakes();
+
+
+  const remaining =
+    mistakes.filter(
+      mistake =>
+        mistake.situationIndex !==
+        situationIndex
+    );
+
+
+  if (remaining.length !== mistakes.length) {
+
+    saveMistakes(remaining);
+
+  }
 
 }
 
@@ -2905,7 +3037,7 @@ function validateAnswer() {
     }
 
 
-    sessionAnswers.push({
+    const answer = {
       situationIndex:
         currentSituationIndex,
       title:
@@ -2926,7 +3058,29 @@ function validateAnswer() {
       correct:
         selectedOption.correct === true,
       correction
-    });
+    };
+
+
+    sessionAnswers.push(
+      answer
+    );
+
+
+    if (answer.correct) {
+
+      forgetMistake(
+        currentSituationIndex
+      );
+
+    }
+
+    else {
+
+      rememberMistake(
+        answer
+      );
+
+    }
 
 
     saveSessionProgress();
