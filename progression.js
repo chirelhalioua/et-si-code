@@ -757,6 +757,10 @@ function showPasswordResetForm() {
 
   isPasswordRecovery = true;
 
+  document.body.classList.add(
+    "is-password-recovery"
+  );
+
   accountForm.hidden = true;
   accountConnected.hidden = true;
   passwordResetForm.hidden = false;
@@ -1089,6 +1093,10 @@ passwordResetForm?.addEventListener(
     confirmNewPassword.value = "";
     passwordResetForm.hidden = true;
     isPasswordRecovery = false;
+
+    document.body.classList.remove(
+      "is-password-recovery"
+    );
 
 
     window.history.replaceState(
