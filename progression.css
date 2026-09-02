@@ -594,8 +594,113 @@ button {
 
 .global-summary[hidden],
 .series-section[hidden],
+.mistakes-section[hidden],
 .progress-empty[hidden] {
   display: none;
+}
+
+
+.mistakes-section {
+  margin-top: 34px;
+  padding: 22px;
+
+  border: 1px solid var(--line);
+  border-radius: 18px;
+
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+
+.mistakes-section .section-heading {
+  margin-bottom: 15px;
+}
+
+
+.mistakes-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+
+.mistake-card {
+  min-width: 0;
+  min-height: 64px;
+  padding: 10px 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  background: var(--panel-light);
+}
+
+
+.mistake-number {
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--red) 14%, transparent);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+
+.mistake-card div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+.mistake-card strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.mistake-card small {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+
+.mistakes-review-link {
+  min-height: 40px;
+  margin: 15px auto 0;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+
+  border-radius: 12px;
+  background: var(--yellow);
+  color: #11151a;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+
+.mistakes-review-link:hover {
+  transform: translateY(-1px);
 }
 
 
@@ -1310,6 +1415,16 @@ button {
     padding-top: 34px;
   }
 
+  .mistakes-section {
+    margin-top: 22px;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  .mistakes-list {
+    grid-template-columns: 1fr;
+  }
+
   .section-heading {
     align-items: flex-start;
     flex-direction: column;
@@ -1446,6 +1561,7 @@ and (min-width: 500px) {
 .is-password-recovery .account-copy,
 .is-password-recovery .global-summary,
 .is-password-recovery .series-section,
+.is-password-recovery .mistakes-section,
 .is-password-recovery .progress-empty {
   display: none !important;
 }
