@@ -139,6 +139,10 @@
     }
 
     return {
+      seriesId:
+        typeof mistake.seriesId === "string"
+          ? mistake.seriesId
+          : DEFAULT_SERIES_ID,
       situationIndex: mistake.situationIndex,
       title: String(mistake.title || "Situation"),
       question: String(mistake.question || "Question non disponible"),
@@ -174,7 +178,10 @@
       MISTAKES_KEY,
       JSON.stringify(
         [...new Map(
-          mistakes.map(item => [item.situationIndex, item])
+          mistakes.map(item => [
+            `${item.seriesId}:${item.situationIndex}`,
+            item
+          ])
         ).values()]
       )
     );
@@ -183,7 +190,7 @@
   function toDatabaseMistake(mistake, userId) {
     return {
       user_id: userId,
-      series_id: DEFAULT_SERIES_ID,
+      series_id: mistake.seriesId,
       situation_index: mistake.situationIndex,
       title: mistake.title,
       question: mistake.question,
@@ -196,6 +203,7 @@
 
   function fromDatabaseMistake(mistake) {
     return normalizeMistake({
+      seriesId: mistake.series_id,
       situationIndex: mistake.situation_index,
       title: mistake.title,
       question: mistake.question,
@@ -276,21 +284,42 @@
     return true;
   }
 
-  function queueMistakeRemoval(situationIndex) {
+  function loadPendingMistakeRemovals() {
     const pending = JSON.parse(
       localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
     );
 
+    return Array.isArray(pending)
+      ? pending.map(item =>
+          Number.isInteger(item)
+            ? { seriesId: DEFAULT_SERIES_ID, situationIndex: item }
+            : item
+        ).filter(item =>
+          item &&
+          typeof item.seriesId === "string" &&
+          Number.isInteger(item.situationIndex)
+        )
+      : [];
+  }
+
+  function queueMistakeRemoval(seriesId, situationIndex) {
+    const pending = loadPendingMistakeRemovals();
+
+    const removals = new Map(
+      [...pending, { seriesId, situationIndex }].map(item => [
+        `${item.seriesId}:${item.situationIndex}`,
+        item
+      ])
+    );
+
     localStorage.setItem(
       PENDING_MISTAKE_REMOVALS_KEY,
-      JSON.stringify(
-        [...new Set([...pending, situationIndex])]
-      )
+      JSON.stringify([...removals.values()])
     );
   }
 
-  async function removeMistake(situationIndex) {
-    queueMistakeRemoval(situationIndex);
+  async function removeMistake(seriesId, situationIndex) {
+    queueMistakeRemoval(seriesId, situationIndex);
 
     const user = await getUser();
 
@@ -302,20 +331,25 @@
       .from("game_mistakes")
       .delete()
       .eq("user_id", user.id)
-      .eq("series_id", DEFAULT_SERIES_ID)
+      .eq("series_id", seriesId)
       .eq("situation_index", situationIndex);
 
     if (error) {
       throw error;
     }
 
-    const pending = JSON.parse(
-      localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
-    );
+    const pending = loadPendingMistakeRemovals();
 
     localStorage.setItem(
       PENDING_MISTAKE_REMOVALS_KEY,
-      JSON.stringify(pending.filter(index => index !== situationIndex))
+      JSON.stringify(
+        pending.filter(item =>
+          !(
+            item.seriesId === seriesId &&
+            item.situationIndex === situationIndex
+          )
+        )
+      )
     );
 
     return true;
@@ -323,27 +357,30 @@
 
   async function syncMistakes(user) {
     const localMistakes = loadLocalMistakes();
-    const pendingRemovals = JSON.parse(
-      localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
-    );
+    const pendingRemovals = loadPendingMistakeRemovals();
 
     if (pendingRemovals.length > 0) {
-      const { error } = await client
-        .from("game_mistakes")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("series_id", DEFAULT_SERIES_ID)
-        .in("situation_index", pendingRemovals);
+      for (const removal of pendingRemovals) {
+        const { error } = await client
+          .from("game_mistakes")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("series_id", removal.seriesId)
+          .eq("situation_index", removal.situationIndex);
 
-      if (error) {
-        throw error;
+        if (error) {
+          throw error;
+        }
       }
 
       localStorage.removeItem(PENDING_MISTAKE_REMOVALS_KEY);
     }
 
     const activeLocalMistakes = localMistakes.filter(
-      mistake => !pendingRemovals.includes(mistake.situationIndex)
+      mistake => !pendingRemovals.some(removal =>
+        removal.seriesId === mistake.seriesId &&
+        removal.situationIndex === mistake.situationIndex
+      )
     );
 
     if (activeLocalMistakes.length > 0) {
@@ -363,9 +400,8 @@
 
     const { data, error } = await client
       .from("game_mistakes")
-      .select("situation_index,title,question,selected_answer,correct_answer,correction,updated_at")
-      .eq("user_id", user.id)
-      .eq("series_id", DEFAULT_SERIES_ID);
+      .select("series_id,situation_index,title,question,selected_answer,correct_answer,correction,updated_at")
+      .eq("user_id", user.id);
 
     if (error) {
       throw error;
@@ -376,13 +412,16 @@
     [...activeLocalMistakes, ...(data || []).map(fromDatabaseMistake)]
       .filter(Boolean)
       .forEach(mistake => {
-        const previous = merged.get(mistake.situationIndex);
+        const key =
+          `${mistake.seriesId}:${mistake.situationIndex}`;
+
+        const previous = merged.get(key);
 
         if (
           !previous ||
           new Date(mistake.updatedAt) >= new Date(previous.updatedAt)
         ) {
-          merged.set(mistake.situationIndex, mistake);
+          merged.set(key, mistake);
         }
       });
 
