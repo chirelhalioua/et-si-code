@@ -1437,3 +1437,65 @@ and (min-width: 500px) {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   MODE RÉINITIALISATION DU MOT DE PASSE
+========================================================= */
+
+.is-password-recovery .progress-intro,
+.is-password-recovery .account-copy,
+.is-password-recovery .global-summary,
+.is-password-recovery .series-section,
+.is-password-recovery .progress-empty {
+  display: none !important;
+}
+
+.is-password-recovery main {
+  min-height: calc(100vh - 82px);
+  padding: 48px 0;
+  display: grid;
+  place-items: center;
+}
+
+.is-password-recovery .account-panel {
+  width: min(100%, 620px);
+  margin: 0;
+  padding: 22px;
+  display: block;
+}
+
+.is-password-recovery .password-reset-form {
+  padding: 24px;
+}
+
+.is-password-recovery .password-reset-form > strong {
+  margin-bottom: 5px;
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.is-password-recovery .account-message {
+  margin: 14px 0 0;
+  text-align: center;
+}
+
+@media (max-width: 620px) {
+  .is-password-recovery main {
+    min-height: calc(100vh - 72px);
+    padding: 28px 0;
+  }
+
+  .is-password-recovery .account-panel {
+    padding: 12px;
+  }
+
+  .is-password-recovery .password-reset-form {
+    padding: 18px;
+    grid-template-columns: 1fr;
+  }
+
+  .is-password-recovery .password-reset-form > strong,
+  .is-password-recovery .password-reset-form > button {
+    grid-column: 1;
+  }
+}
