@@ -4,7 +4,7 @@
   const SEEN_BADGES_KEY =
     "etsi-seen-badges";
 
-  const definitions = [
+  const globalDefinitions = [
     {
       id: "first-trip",
       name: "Premier trajet",
@@ -74,11 +74,62 @@
   ];
 
   function evaluate(history = [], mistakes = []) {
-    return definitions.map(badge => ({
+    return globalDefinitions.map(badge => ({
       ...badge,
+      scope: "global",
       unlocked:
         badge.isUnlocked(history, mistakes)
     }));
+  }
+
+  function evaluateSeries(history = []) {
+    const series = new Map();
+
+    history.forEach(result => {
+      const seriesId =
+        typeof result.seriesId === "string"
+          ? result.seriesId
+          : "serie-generale-1";
+
+      if (!series.has(seriesId)) {
+        series.set(seriesId, {
+          id: seriesId,
+          title:
+            typeof result.seriesTitle === "string"
+              ? result.seriesTitle
+              : "Série"
+        });
+      }
+    });
+
+    return [...series.values()].map(item => {
+      const shortTitle = item.title.replace(
+        /^Série\s*\d*\s*[—–-]?\s*/i,
+        ""
+      ) || item.title;
+
+      return {
+        id: `series-perfect-${item.id}`,
+        name: `Maîtrise : ${shortTitle}`,
+        icon: "🏁",
+        description: "Obtenir 10/10 dans cette série",
+        scope: "series",
+        seriesId: item.id,
+        unlocked: history.some(
+          result =>
+            result.seriesId === item.id &&
+            result.score === 10 &&
+            result.total === 10
+        )
+      };
+    });
+  }
+
+  function evaluateAll(history = [], mistakes = []) {
+    return [
+      ...evaluate(history, mistakes),
+      ...evaluateSeries(history)
+    ];
   }
 
   function loadSeenBadges() {
@@ -97,7 +148,7 @@
   function getNewlyUnlocked(history, mistakes) {
     const seen = loadSeenBadges();
 
-    return evaluate(history, mistakes).filter(
+    return evaluateAll(history, mistakes).filter(
       badge =>
         badge.unlocked &&
         !seen.includes(badge.id)
@@ -125,6 +176,8 @@
 
   window.ETSIBadges = {
     evaluate,
+    evaluateSeries,
+    evaluateAll,
     getNewlyUnlocked,
     markAsSeen
   };
