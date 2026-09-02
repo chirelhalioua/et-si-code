@@ -58,7 +58,10 @@ const STORAGE_KEYS = {
     "etsi-game-history",
 
   mistakes:
-    "etsi-game-mistakes"
+    "etsi-game-mistakes",
+
+  selectedSeries:
+    "etsi-selected-series"
 
 };
 
@@ -376,6 +379,86 @@ function createSessionId() {
 }
 
 
+async function loadSelectedSeries() {
+
+  try {
+
+    const response =
+      await fetch(
+        "series.json",
+        { cache: "no-store" }
+      );
+
+
+    if (!response.ok) {
+
+      return;
+
+    }
+
+
+    const series =
+      await response.json();
+
+
+    const requestedSeriesId =
+      new URLSearchParams(
+        window.location.search
+      ).get("series") ||
+      readStorage(
+        STORAGE_KEYS.selectedSeries,
+        CONFIG.seriesId
+      );
+
+
+    const selectedSeries =
+      Array.isArray(series)
+        ? series.find(
+            item =>
+              item.id === requestedSeriesId &&
+              item.available === true
+          ) || series.find(
+            item => item.id === CONFIG.seriesId
+          )
+        : null;
+
+
+    if (!selectedSeries) {
+
+      return;
+
+    }
+
+
+    CONFIG.seriesId =
+      selectedSeries.id;
+
+    CONFIG.seriesTitle =
+      selectedSeries.title;
+
+    CONFIG.situationsFile =
+      selectedSeries.situationsFile;
+
+
+    localStorage.setItem(
+      STORAGE_KEYS.selectedSeries,
+      selectedSeries.id
+    );
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Configuration de la série indisponible :",
+      error
+    );
+
+  }
+
+}
+
+
 function loadMistakes() {
 
   try {
@@ -396,6 +479,14 @@ function loadMistakes() {
             mistake &&
             Number.isInteger(mistake.situationIndex) &&
             mistake.situationIndex >= 0
+        ).map(
+          mistake => ({
+            ...mistake,
+            seriesId:
+              typeof mistake.seriesId === "string"
+                ? mistake.seriesId
+                : "serie-generale-1"
+          })
         )
       : [];
 
@@ -421,7 +512,7 @@ function saveMistakes(mistakes) {
     [...new Map(
       mistakes.map(
         mistake => [
-          mistake.situationIndex,
+          `${mistake.seriesId}:${mistake.situationIndex}`,
           mistake
         ]
       )
@@ -457,13 +548,17 @@ function rememberMistake(answer) {
   const mistakes =
     loadMistakes().filter(
       mistake =>
-        mistake.situationIndex !==
-        answer.situationIndex
+        !(
+          mistake.seriesId === CONFIG.seriesId &&
+          mistake.situationIndex === answer.situationIndex
+        )
     );
 
 
   mistakes.push({
     ...answer,
+    seriesId:
+      CONFIG.seriesId,
     updatedAt:
       new Date().toISOString()
   });
@@ -476,8 +571,8 @@ function rememberMistake(answer) {
   const savedMistake =
     savedMistakes.find(
       mistake =>
-        mistake.situationIndex ===
-        answer.situationIndex
+        mistake.seriesId === CONFIG.seriesId &&
+        mistake.situationIndex === answer.situationIndex
     );
 
 
@@ -507,8 +602,10 @@ function forgetMistake(situationIndex) {
   const remaining =
     mistakes.filter(
       mistake =>
-        mistake.situationIndex !==
-        situationIndex
+        !(
+          mistake.seriesId === CONFIG.seriesId &&
+          mistake.situationIndex === situationIndex
+        )
     );
 
 
@@ -517,7 +614,10 @@ function forgetMistake(situationIndex) {
     saveMistakes(remaining);
 
     window.ETSISync
-      ?.removeMistake(situationIndex)
+      ?.removeMistake(
+        CONFIG.seriesId,
+        situationIndex
+      )
       .catch(
         error =>
           console.warn(
@@ -1120,6 +1220,8 @@ function saveSessionProgress() {
       JSON.stringify({
         sessionId:
           currentSessionId,
+        seriesId:
+          CONFIG.seriesId,
         score: sessionScore,
         completedSituationIndexes,
         sessionAnswers,
@@ -1162,6 +1264,20 @@ function loadSessionProgress() {
 
     const saved =
       JSON.parse(raw);
+
+
+    const savedSeriesId =
+      typeof saved.seriesId === "string"
+        ? saved.seriesId
+        : "serie-generale-1";
+
+
+    if (savedSeriesId !== CONFIG.seriesId) {
+
+      resetSessionProgress();
+      return;
+
+    }
 
 
     currentSessionId =
@@ -1958,6 +2074,9 @@ function saveGameProgress() {
 
   const progress = {
 
+    seriesId:
+      CONFIG.seriesId,
+
     situationIndex:
       currentSituationIndex,
 
@@ -2021,6 +2140,19 @@ function getSavedGameProgress() {
 
     const saved =
       JSON.parse(raw);
+
+
+    const savedSeriesId =
+      typeof saved.seriesId === "string"
+        ? saved.seriesId
+        : "serie-generale-1";
+
+
+    if (savedSeriesId !== CONFIG.seriesId) {
+
+      return null;
+
+    }
 
 
     if (
@@ -2459,6 +2591,11 @@ function startMistakeReview() {
 
   const mistakeIndexes =
     loadMistakes()
+      .filter(
+        mistake =>
+          mistake.seriesId ===
+          CONFIG.seriesId
+      )
       .map(
         mistake =>
           mistake.situationIndex
@@ -3525,15 +3662,23 @@ function showSessionSummary() {
       .join("");
 
 
-  const remainingMistakes =
+  const allRemainingMistakes =
     loadMistakes();
+
+
+  const remainingMistakes =
+    allRemainingMistakes.filter(
+      mistake =>
+        mistake.seriesId ===
+        CONFIG.seriesId
+    );
 
 
   const newlyUnlockedBadges =
     window.ETSIBadges
       ?.getNewlyUnlocked(
         gameHistory,
-        remainingMistakes
+        allRemainingMistakes
       ) || [];
 
 
@@ -4342,6 +4487,9 @@ async function init() {
 
 
     renderPlayer();
+
+
+    await loadSelectedSeries();
 
 
     if (window.ETSISync) {
