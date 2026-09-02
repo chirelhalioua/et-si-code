@@ -507,7 +507,7 @@ function startGame() {
   // -----------------------------------------------------------
 
   window.location.href =
-    "jeu.html";
+    "series.html";
 
 }
 
