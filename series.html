@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Choisis une série ET SI ? et poursuis ta progression au Code de la route.">
+  <title>Choisir une série — ET SI ?</title>
+
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem("etsi-theme") === "light" ? "light" : "dark";
+    }
+    catch (error) {
+      document.documentElement.dataset.theme = "dark";
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="stylesheet" href="series.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-sync.js" defer></script>
+  <script src="series.js" defer></script>
+</head>
+
+<body>
+  <div class="series-page">
+    <header class="series-header">
+      <a class="series-brand" href="index.html" aria-label="Accueil ET SI ?">
+        <span>ET SI</span><b>?</b>
+      </a>
+
+      <nav class="series-nav" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a class="is-active" href="series.html" aria-current="page">Jouer</a>
+        <a href="progression.html">Progression</a>
+        <button id="series-theme-toggle" type="button" aria-label="Changer de thème">
+          <span aria-hidden="true">☾</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="series-intro">
+        <span>À TOI DE JOUER</span>
+        <h1>Choisis ta série</h1>
+        <p>Entraîne-toi à ton rythme et retrouve ton meilleur score pour chaque série.</p>
+      </section>
+
+      <section class="series-filters" aria-label="Filtrer les séries">
+        <div>
+          <strong>Thème</strong>
+          <div id="theme-filters" class="filter-options"></div>
+        </div>
+        <div>
+          <strong>Niveau</strong>
+          <div id="level-filters" class="filter-options"></div>
+        </div>
+      </section>
+
+      <section id="series-grid" class="series-grid" aria-live="polite">
+        <p class="series-loading">Chargement des séries…</p>
+      </section>
+    </main>
+
+    <footer>
+      <strong>ET SI ?</strong>
+      <span>Observe · Anticipe · Décide</span>
+    </footer>
+  </div>
+</body>
+</html>
