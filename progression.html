@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="progression.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase-sync.js" defer></script>
+  <script src="badges.js" defer></script>
   <script src="progression.js" defer></script>
 </head>
 
@@ -211,6 +212,19 @@
           Revoir mes erreurs
           <span aria-hidden="true">→</span>
         </a>
+      </section>
+
+      <section id="badges-section" class="badges-section" aria-labelledby="badges-title" hidden>
+        <div class="section-heading">
+          <div>
+            <span>RÉCOMPENSES</span>
+            <h2 id="badges-title">Mes badges</h2>
+          </div>
+
+          <small id="badges-count">0 badge obtenu</small>
+        </div>
+
+        <div id="badges-list" class="badges-list"></div>
       </section>
 
       <section id="series-section" class="series-section" hidden>
