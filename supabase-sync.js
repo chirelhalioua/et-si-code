@@ -13,6 +13,12 @@
   const HISTORY_OWNER_KEY =
     "etsi-game-history-owner";
 
+  const MISTAKES_KEY =
+    "etsi-game-mistakes";
+
+  const PENDING_MISTAKE_REMOVALS_KEY =
+    "etsi-pending-mistake-removals";
+
   const DEFAULT_SERIES_ID =
     "serie-generale-1";
 
@@ -123,6 +129,83 @@
     });
   }
 
+  function normalizeMistake(mistake) {
+    if (
+      !mistake ||
+      !Number.isInteger(mistake.situationIndex) ||
+      mistake.situationIndex < 0
+    ) {
+      return null;
+    }
+
+    return {
+      situationIndex: mistake.situationIndex,
+      title: String(mistake.title || "Situation"),
+      question: String(mistake.question || "Question non disponible"),
+      selectedAnswer: String(mistake.selectedAnswer || "Réponse non disponible"),
+      correctAnswer: String(mistake.correctAnswer || "Réponse non disponible"),
+      correct: false,
+      correction: String(mistake.correction || ""),
+      updatedAt:
+        typeof mistake.updatedAt === "string"
+          ? mistake.updatedAt
+          : new Date().toISOString()
+    };
+  }
+
+  function loadLocalMistakes() {
+    try {
+      const mistakes = JSON.parse(
+        localStorage.getItem(MISTAKES_KEY) || "[]"
+      );
+
+      return Array.isArray(mistakes)
+        ? mistakes.map(normalizeMistake).filter(Boolean)
+        : [];
+    }
+    catch (error) {
+      console.warn("Erreurs locales indisponibles :", error);
+      return [];
+    }
+  }
+
+  function saveLocalMistakes(mistakes) {
+    localStorage.setItem(
+      MISTAKES_KEY,
+      JSON.stringify(
+        [...new Map(
+          mistakes.map(item => [item.situationIndex, item])
+        ).values()]
+      )
+    );
+  }
+
+  function toDatabaseMistake(mistake, userId) {
+    return {
+      user_id: userId,
+      series_id: DEFAULT_SERIES_ID,
+      situation_index: mistake.situationIndex,
+      title: mistake.title,
+      question: mistake.question,
+      selected_answer: mistake.selectedAnswer,
+      correct_answer: mistake.correctAnswer,
+      correction: mistake.correction,
+      updated_at: mistake.updatedAt
+    };
+  }
+
+  function fromDatabaseMistake(mistake) {
+    return normalizeMistake({
+      situationIndex: mistake.situation_index,
+      title: mistake.title,
+      question: mistake.question,
+      selectedAnswer: mistake.selected_answer,
+      correctAnswer: mistake.correct_answer,
+      correction: mistake.correction,
+      updatedAt: mistake.updated_at
+    });
+  }
+
   async function getUser() {
     const { data, error } =
       await client.auth.getSession();
@@ -169,6 +252,143 @@
     }
 
     return true;
+  }
+
+  async function uploadMistake(mistake) {
+    const normalized = normalizeMistake(mistake);
+    const user = await getUser();
+
+    if (!normalized || !user) {
+      return false;
+    }
+
+    const { error } = await client
+      .from("game_mistakes")
+      .upsert(
+        toDatabaseMistake(normalized, user.id),
+        { onConflict: "user_id,series_id,situation_index" }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    return true;
+  }
+
+  function queueMistakeRemoval(situationIndex) {
+    const pending = JSON.parse(
+      localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
+    );
+
+    localStorage.setItem(
+      PENDING_MISTAKE_REMOVALS_KEY,
+      JSON.stringify(
+        [...new Set([...pending, situationIndex])]
+      )
+    );
+  }
+
+  async function removeMistake(situationIndex) {
+    queueMistakeRemoval(situationIndex);
+
+    const user = await getUser();
+
+    if (!user) {
+      return false;
+    }
+
+    const { error } = await client
+      .from("game_mistakes")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("series_id", DEFAULT_SERIES_ID)
+      .eq("situation_index", situationIndex);
+
+    if (error) {
+      throw error;
+    }
+
+    const pending = JSON.parse(
+      localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
+    );
+
+    localStorage.setItem(
+      PENDING_MISTAKE_REMOVALS_KEY,
+      JSON.stringify(pending.filter(index => index !== situationIndex))
+    );
+
+    return true;
+  }
+
+  async function syncMistakes(user) {
+    const localMistakes = loadLocalMistakes();
+    const pendingRemovals = JSON.parse(
+      localStorage.getItem(PENDING_MISTAKE_REMOVALS_KEY) || "[]"
+    );
+
+    if (pendingRemovals.length > 0) {
+      const { error } = await client
+        .from("game_mistakes")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("series_id", DEFAULT_SERIES_ID)
+        .in("situation_index", pendingRemovals);
+
+      if (error) {
+        throw error;
+      }
+
+      localStorage.removeItem(PENDING_MISTAKE_REMOVALS_KEY);
+    }
+
+    const activeLocalMistakes = localMistakes.filter(
+      mistake => !pendingRemovals.includes(mistake.situationIndex)
+    );
+
+    if (activeLocalMistakes.length > 0) {
+      const { error } = await client
+        .from("game_mistakes")
+        .upsert(
+          activeLocalMistakes.map(
+            mistake => toDatabaseMistake(mistake, user.id)
+          ),
+          { onConflict: "user_id,series_id,situation_index" }
+        );
+
+      if (error) {
+        throw error;
+      }
+    }
+
+    const { data, error } = await client
+      .from("game_mistakes")
+      .select("situation_index,title,question,selected_answer,correct_answer,correction,updated_at")
+      .eq("user_id", user.id)
+      .eq("series_id", DEFAULT_SERIES_ID);
+
+    if (error) {
+      throw error;
+    }
+
+    const merged = new Map();
+
+    [...activeLocalMistakes, ...(data || []).map(fromDatabaseMistake)]
+      .filter(Boolean)
+      .forEach(mistake => {
+        const previous = merged.get(mistake.situationIndex);
+
+        if (
+          !previous ||
+          new Date(mistake.updatedAt) >= new Date(previous.updatedAt)
+        ) {
+          merged.set(mistake.situationIndex, mistake);
+        }
+      });
+
+    const mistakes = [...merged.values()];
+    saveLocalMistakes(mistakes);
+    return mistakes;
   }
 
   async function syncHistory() {
@@ -267,9 +487,13 @@
       user.id
     );
 
+    const mistakes =
+      await syncMistakes(user);
+
     return {
       user,
-      history
+      history,
+      mistakes
     };
   }
 
@@ -278,9 +502,13 @@
     getUser,
     syncHistory,
     uploadAttempt,
+    uploadMistake,
+    removeMistake,
     clearLocalAccountHistory() {
       localStorage.removeItem(HISTORY_KEY);
       localStorage.removeItem(HISTORY_OWNER_KEY);
+      localStorage.removeItem(MISTAKES_KEY);
+      localStorage.removeItem(PENDING_MISTAKE_REMOVALS_KEY);
     }
   };
 })();
