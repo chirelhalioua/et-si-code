@@ -63,6 +63,12 @@ const mistakesCount =
   );
 
 
+const mistakesActions =
+  document.getElementById(
+    "mistakes-actions"
+  );
+
+
 const badgesSection =
   document.getElementById(
     "badges-section"
@@ -122,7 +128,7 @@ let currentBadgeScope =
 
 
 let situationMetadata =
-  [];
+  new Map();
 
 
 const emptyState =
@@ -375,7 +381,7 @@ async function loadSituationMetadata() {
 
     const response =
       await fetch(
-        "situations.json",
+        "series.json",
         { cache: "no-store" }
       );
 
@@ -387,14 +393,68 @@ async function loadSituationMetadata() {
     }
 
 
-    const data =
+    const series =
       await response.json();
 
 
+    if (!Array.isArray(series)) {
+
+      return;
+
+    }
+
+
+    const loadedSeries =
+      await Promise.all(
+        series
+          .filter(item => item.available)
+          .map(
+            async item => {
+
+              const situationsResponse =
+                await fetch(
+                  item.situationsFile,
+                  { cache: "no-store" }
+                );
+
+
+              const situations =
+                situationsResponse.ok
+                  ? await situationsResponse.json()
+                  : [];
+
+
+              return {
+                ...item,
+                situations:
+                  Array.isArray(situations)
+                    ? situations
+                    : []
+              };
+
+            }
+          )
+      );
+
+
     situationMetadata =
-      Array.isArray(data)
-        ? data
-        : [];
+      new Map();
+
+
+    loadedSeries.forEach(
+      seriesItem =>
+        seriesItem.situations.forEach(
+          (situation, index) =>
+            situationMetadata.set(
+              `${seriesItem.id}:${index}`,
+              {
+                ...situation,
+                seriesTitle:
+                  seriesItem.title
+              }
+            )
+        )
+    );
 
 
     renderProgress();
@@ -430,6 +490,13 @@ function renderMistakes(mistakes) {
 
     mistakesSection.hidden = true;
     mistakesList.innerHTML = "";
+
+    if (mistakesActions) {
+
+      mistakesActions.innerHTML = "";
+
+    }
+
     return;
 
   }
@@ -445,9 +512,9 @@ function renderMistakes(mistakes) {
         mistake => {
 
           const situation =
-            situationMetadata[
-              mistake.situationIndex
-            ] || {};
+            situationMetadata.get(
+              `${mistake.seriesId || DEFAULT_SERIES_ID}:${mistake.situationIndex}`
+            ) || {};
 
 
           const title =
@@ -461,6 +528,11 @@ function renderMistakes(mistakes) {
             "Code de la route";
 
 
+          const seriesTitle =
+            situation.seriesTitle ||
+            DEFAULT_SERIES_TITLE;
+
+
           return `
             <article class="mistake-card">
               <span class="mistake-number" aria-hidden="true">
@@ -468,7 +540,7 @@ function renderMistakes(mistakes) {
               </span>
               <div>
                 <strong>${escapeHtml(title)}</strong>
-                <small>${escapeHtml(category)}</small>
+                <small>${escapeHtml(seriesTitle)} · ${escapeHtml(category)}</small>
               </div>
             </article>
           `;
@@ -476,6 +548,55 @@ function renderMistakes(mistakes) {
         }
       )
       .join("");
+
+
+  const mistakesBySeries =
+    new Map();
+
+
+  mistakes.forEach(
+    mistake => {
+
+      const seriesId =
+        mistake.seriesId ||
+        DEFAULT_SERIES_ID;
+
+
+      if (!mistakesBySeries.has(seriesId)) {
+
+        const situation =
+          situationMetadata.get(
+            `${seriesId}:${mistake.situationIndex}`
+          );
+
+
+        mistakesBySeries.set(
+          seriesId,
+          situation?.seriesTitle ||
+          DEFAULT_SERIES_TITLE
+        );
+
+      }
+
+    }
+  );
+
+
+  if (mistakesActions) {
+
+    mistakesActions.innerHTML =
+      [...mistakesBySeries.entries()]
+        .map(
+          ([seriesId, title]) => `
+            <a class="mistakes-review-link" href="jeu.html?series=${encodeURIComponent(seriesId)}&review=errors">
+              Revoir ${escapeHtml(title)}
+              <span aria-hidden="true">→</span>
+            </a>
+          `
+        )
+        .join("");
+
+  }
 
 
   mistakesSection.hidden = false;
@@ -952,7 +1073,7 @@ function renderEmptyState() {
 
 
     progressEmptyAction.href =
-      "jeu.html";
+      "series.html";
 
 
     return;
