@@ -469,7 +469,31 @@ function rememberMistake(answer) {
   });
 
 
-  saveMistakes(mistakes);
+  const savedMistakes =
+    saveMistakes(mistakes);
+
+
+  const savedMistake =
+    savedMistakes.find(
+      mistake =>
+        mistake.situationIndex ===
+        answer.situationIndex
+    );
+
+
+  if (savedMistake) {
+
+    window.ETSISync
+      ?.uploadMistake(savedMistake)
+      .catch(
+        error =>
+          console.warn(
+            "L’erreur sera synchronisée plus tard :",
+            error
+          )
+      );
+
+  }
 
 }
 
@@ -491,6 +515,16 @@ function forgetMistake(situationIndex) {
   if (remaining.length !== mistakes.length) {
 
     saveMistakes(remaining);
+
+    window.ETSISync
+      ?.removeMistake(situationIndex)
+      .catch(
+        error =>
+          console.warn(
+            "La correction sera synchronisée plus tard :",
+            error
+          )
+      );
 
   }
 
@@ -1004,8 +1038,9 @@ async function loadSituations() {
 function getRandomSituationIndex() {
 
   const availableIndexes =
-    situations
-      .map((_, index) => index)
+    (reviewMode
+      ? reviewSituationIndexes
+      : situations.map((_, index) => index))
       .filter(
         index =>
           !completedSituationIndexes
@@ -1038,6 +1073,15 @@ function getRandomSituationIndex() {
 }
 
 
+function getSessionTotal() {
+
+  return reviewMode
+    ? reviewSituationIndexes.length
+    : situations.length;
+
+}
+
+
 
 // =============================================================
 // 16 BIS. SCORE ET PROGRESSION DE LA PARTIE
@@ -1046,7 +1090,7 @@ function getRandomSituationIndex() {
 function renderSessionProgress() {
 
   const total =
-    situations.length || 10;
+    getSessionTotal() || 10;
 
 
   if (sessionScoreDisplay) {
@@ -1078,7 +1122,9 @@ function saveSessionProgress() {
           currentSessionId,
         score: sessionScore,
         completedSituationIndexes,
-        sessionAnswers
+        sessionAnswers,
+        reviewMode,
+        reviewSituationIndexes
       })
     );
 
@@ -1159,6 +1205,32 @@ function loadSessionProgress() {
         : [];
 
 
+    reviewMode =
+      saved.reviewMode === true;
+
+
+    reviewSituationIndexes =
+      reviewMode &&
+      Array.isArray(saved.reviewSituationIndexes)
+        ? saved.reviewSituationIndexes.filter(
+            index =>
+              Number.isInteger(index) &&
+              index >= 0 &&
+              index < situations.length
+          )
+        : [];
+
+
+    if (
+      reviewMode &&
+      reviewSituationIndexes.length === 0
+    ) {
+
+      reviewMode = false;
+
+    }
+
+
     sessionScore =
       Math.min(
         sessionScore,
@@ -1176,6 +1248,8 @@ function loadSessionProgress() {
     sessionScore = 0;
     completedSituationIndexes = [];
     sessionAnswers = [];
+    reviewMode = false;
+    reviewSituationIndexes = [];
     currentSessionId =
       createSessionId();
     renderSessionProgress();
@@ -1192,6 +1266,9 @@ function resetSessionProgress() {
   sessionAnswers = [];
   currentSessionId =
     createSessionId();
+
+  reviewMode = false;
+  reviewSituationIndexes = [];
 
 
   try {
@@ -2355,11 +2432,16 @@ function startNewSituation() {
 
   if (counter) {
 
+    const position =
+      completedSituationIndexes.length + 1;
+
     counter.textContent =
       `Situation ${
-        currentSituationIndex + 1
+        reviewMode
+          ? position
+          : currentSituationIndex + 1
       } / ${
-        situations.length
+        getSessionTotal()
       }`;
 
   }
@@ -2369,6 +2451,45 @@ function startNewSituation() {
 
 
   renderStep();
+
+}
+
+
+function startMistakeReview() {
+
+  const mistakeIndexes =
+    loadMistakes()
+      .map(
+        mistake =>
+          mistake.situationIndex
+      )
+      .filter(
+        (index, position, list) =>
+          index < situations.length &&
+          list.indexOf(index) === position
+      );
+
+
+  if (mistakeIndexes.length === 0) {
+
+    showNoMistakesMessage();
+    return;
+
+  }
+
+
+  clearGameProgress();
+
+  sessionScore = 0;
+  completedSituationIndexes = [];
+  sessionAnswers = [];
+  currentSessionId = createSessionId();
+  reviewMode = true;
+  reviewSituationIndexes = mistakeIndexes;
+
+  saveSessionProgress();
+  renderSessionProgress();
+  startNewSituation();
 
 }
 
@@ -3205,7 +3326,7 @@ function validateAnswer() {
 
   const sessionFinished =
     completedSituationIndexes.length >=
-    situations.length;
+    getSessionTotal();
 
 
   setActionButton(
@@ -3304,6 +3425,15 @@ function handleMainAction() {
 
 
   if (
+    mode === "review-errors"
+  ) {
+
+    startMistakeReview();
+
+  }
+
+
+  if (
     mode === "restart"
   ) {
 
@@ -3324,7 +3454,7 @@ function handleMainAction() {
 function showSessionSummary() {
 
   const total =
-    situations.length;
+    getSessionTotal();
 
 
   const percentage =
@@ -3336,7 +3466,7 @@ function showSessionSummary() {
 
 
   const gameHistory =
-    total > 0
+    total > 0 && !reviewMode
       ? recordSessionResult(
           sessionScore,
           total
@@ -3395,6 +3525,10 @@ function showSessionSummary() {
       .join("");
 
 
+  const remainingMistakes =
+    loadMistakes();
+
+
   let resultIcon =
     "↻";
 
@@ -3423,7 +3557,9 @@ function showSessionSummary() {
   if (text) {
 
     text.textContent =
-      "Résultat de ta tentative";
+      reviewMode
+        ? "Résultat de ta révision"
+        : "Résultat de ta tentative";
 
 
     text.classList.add(
@@ -3529,6 +3665,19 @@ function showSessionSummary() {
           </div>
         </section>
 
+        ${remainingMistakes.length > 0
+          ? `
+            <button class="review-mistakes-button" type="button">
+              Revoir mes erreurs
+              <span>${remainingMistakes.length}</span>
+            </button>
+          `
+          : `
+            <p class="no-mistakes-message" role="status">
+              Bravo, tu n’as plus d’erreurs à revoir !
+            </p>
+          `}
+
         <a class="global-progress-link" href="progression.html">
           Voir ma progression globale
           <span aria-hidden="true">→</span>
@@ -3559,6 +3708,16 @@ function showSessionSummary() {
     const detail =
       choices.querySelector(
         ".session-result-detail"
+      );
+
+
+    choices
+      .querySelector(
+        ".review-mistakes-button"
+      )
+      ?.addEventListener(
+        "click",
+        startMistakeReview
       );
 
 
@@ -3661,6 +3820,52 @@ function showSessionSummary() {
 
 
   clearGameProgress();
+
+
+  setActionButton(
+    "Nouvelle tentative",
+    "restart"
+  );
+
+
+  if (actionButton) {
+
+    actionButton.disabled = false;
+
+  }
+
+}
+
+
+function showNoMistakesMessage() {
+
+  if (text) {
+
+    text.textContent =
+      "Révision des erreurs";
+
+    text.classList.add(
+      "is-session-summary-title"
+    );
+
+  }
+
+
+  if (choices) {
+
+    choices.classList.add(
+      "has-session-summary"
+    );
+
+    choices.innerHTML = `
+      <section class="session-summary">
+        <p class="no-mistakes-message" role="status">
+          Bravo, tu n’as plus d’erreurs à revoir !
+        </p>
+      </section>
+    `;
+
+  }
 
 
   setActionButton(
