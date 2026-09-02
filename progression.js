@@ -718,10 +718,16 @@ function renderAccount(user) {
       : "SYNCHRONISATION";
 
 
+  const hasLocalProgress =
+    loadHistory().length > 0;
+
+
   accountDescription.textContent =
     isConnected
       ? "Tes résultats sont synchronisés sur tous tes appareils."
-      : "Connecte-toi pour conserver les mêmes résultats sur ton téléphone, ton ordinateur et tes différents navigateurs.";
+      : hasLocalProgress
+        ? "Ta progression est enregistrée localement sur cet appareil. Connecte-toi pour la retrouver sur tous tes appareils."
+        : "Connecte-toi pour conserver les mêmes résultats sur ton téléphone, ton ordinateur et tes différents navigateurs.";
 
 
   accountPanel.classList.toggle(
