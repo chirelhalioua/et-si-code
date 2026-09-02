@@ -3529,6 +3529,30 @@ function showSessionSummary() {
     loadMistakes();
 
 
+  const newlyUnlockedBadges =
+    window.ETSIBadges
+      ?.getNewlyUnlocked(
+        gameHistory,
+        remainingMistakes
+      ) || [];
+
+
+  const badgeRewards =
+    newlyUnlockedBadges
+      .map(
+        badge => `
+          <span class="session-badge-reward">
+            <i aria-hidden="true">${badge.icon}</i>
+            <span>
+              <small>Nouveau badge</small>
+              <strong>${badge.name}</strong>
+            </span>
+          </span>
+        `
+      )
+      .join("");
+
+
   let resultIcon =
     "↻";
 
@@ -3635,6 +3659,14 @@ function showSessionSummary() {
           <span>${sessionScore} bonne${sessionScore !== 1 ? "s" : ""} réponse${sessionScore !== 1 ? "s" : ""} · ${total - sessionScore} erreur${total - sessionScore !== 1 ? "s" : ""}</span>
         </div>
 
+        ${badgeRewards
+          ? `
+            <div class="session-badge-rewards" role="status" aria-label="Nouveaux badges débloqués">
+              ${badgeRewards}
+            </div>
+          `
+          : ""}
+
         <div class="session-result-dots" aria-label="${sessionScore} bonnes réponses et ${total - sessionScore} erreurs">
           ${scoreDots}
         </div>
@@ -3709,6 +3741,16 @@ function showSessionSummary() {
       choices.querySelector(
         ".session-result-detail"
       );
+
+
+    if (newlyUnlockedBadges.length > 0) {
+
+      window.ETSIBadges
+        ?.markAsSeen(
+          newlyUnlockedBadges
+        );
+
+    }
 
 
     choices
