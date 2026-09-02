@@ -846,6 +846,14 @@ button {
 }
 
 
+.mistakes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+
 .mistakes-review-link:hover {
   transform: translateY(-1px);
 }
