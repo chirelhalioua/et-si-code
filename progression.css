@@ -595,8 +595,118 @@ button {
 .global-summary[hidden],
 .series-section[hidden],
 .mistakes-section[hidden],
+.badges-section[hidden],
 .progress-empty[hidden] {
   display: none;
+}
+
+
+.badges-section {
+  margin-top: 34px;
+  padding: 22px;
+
+  border: 1px solid var(--line);
+  border-radius: 18px;
+
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+
+.badges-section .section-heading {
+  margin-bottom: 15px;
+}
+
+
+.badges-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+
+.badge-card {
+  position: relative;
+  min-width: 0;
+  min-height: 126px;
+  padding: 15px 12px 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: var(--panel-light);
+  text-align: center;
+}
+
+
+.badge-card.is-unlocked {
+  border-color: color-mix(in srgb, var(--yellow) 60%, var(--line));
+  background: color-mix(in srgb, var(--yellow) 8%, var(--panel-light));
+}
+
+
+.badge-card.is-locked {
+  opacity: 0.62;
+  filter: grayscale(0.45);
+}
+
+
+.badge-icon {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: var(--panel);
+  font-size: 21px;
+}
+
+
+.badge-card.is-unlocked .badge-icon {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--yellow) 13%, transparent);
+}
+
+
+.badge-card div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+
+.badge-card strong {
+  color: var(--text);
+  font-size: 11px;
+}
+
+
+.badge-card small {
+  color: var(--text-muted);
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+
+.badge-status {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+.badge-card.is-unlocked .badge-status {
+  color: var(--yellow);
 }
 
 
@@ -1421,6 +1531,22 @@ button {
     border-radius: 15px;
   }
 
+  .badges-section {
+    margin-top: 22px;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  .badges-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .badge-card {
+    min-height: 116px;
+    padding: 12px 8px 10px;
+  }
+
   .mistakes-list {
     grid-template-columns: 1fr;
   }
@@ -1562,6 +1688,7 @@ and (min-width: 500px) {
 .is-password-recovery .global-summary,
 .is-password-recovery .series-section,
 .is-password-recovery .mistakes-section,
+.is-password-recovery .badges-section,
 .is-password-recovery .progress-empty {
   display: none !important;
 }
