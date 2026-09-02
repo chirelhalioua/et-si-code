@@ -117,6 +117,10 @@ let isPasswordRecovery =
   false;
 
 
+let currentBadgeScope =
+  "global";
+
+
 let situationMetadata =
   [];
 
@@ -503,9 +507,17 @@ function renderBadges(history, mistakes) {
 
 
   const badges =
-    window.ETSIBadges.evaluate(
+    window.ETSIBadges.evaluateAll(
       history,
       mistakes
+    );
+
+
+  const displayedBadges =
+    badges.filter(
+      badge =>
+        badge.scope ===
+        currentBadgeScope
     );
 
 
@@ -520,7 +532,7 @@ function renderBadges(history, mistakes) {
 
 
   badgesList.innerHTML =
-    badges
+    displayedBadges
       .map(
         badge => `
           <article class="badge-card ${badge.unlocked ? "is-unlocked" : "is-locked"}">
@@ -541,6 +553,33 @@ function renderBadges(history, mistakes) {
 
 
   badgesSection.hidden = false;
+
+
+  badgesSection
+    .querySelectorAll(
+      "[data-badge-scope]"
+    )
+    .forEach(
+      button => {
+
+        const isActive =
+          button.dataset.badgeScope ===
+          currentBadgeScope;
+
+
+        button.classList.toggle(
+          "is-active",
+          isActive
+        );
+
+
+        button.setAttribute(
+          "aria-selected",
+          String(isActive)
+        );
+
+      }
+    );
 
 }
 
@@ -1497,6 +1536,38 @@ seriesFilter?.addEventListener(
 
     applySeriesFilter(
       button.dataset.seriesFilter
+    );
+
+  }
+);
+
+
+badgesSection?.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-badge-scope]"
+      );
+
+
+    if (!button) {
+
+      return;
+
+    }
+
+
+    currentBadgeScope =
+      button.dataset.badgeScope === "series"
+        ? "series"
+        : "global";
+
+
+    renderBadges(
+      loadHistory(),
+      loadMistakes()
     );
 
   }
