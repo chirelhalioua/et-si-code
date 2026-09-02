@@ -4338,6 +4338,20 @@ async function init() {
     loadSessionProgress();
 
 
+    const wantsMistakeReview =
+      new URLSearchParams(
+        window.location.search
+      ).get("review") === "errors";
+
+
+    if (wantsMistakeReview) {
+
+      startMistakeReview();
+      return;
+
+    }
+
+
     /*
      * IMPORTANT :
      * vérifie d'abord s'il existe
