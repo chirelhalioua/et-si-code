@@ -1040,6 +1040,82 @@ html[data-theme="light"] .theme-moon {
 }
 
 
+.session-badge-rewards {
+  width: 100%;
+
+  display: grid;
+  gap: 7px;
+}
+
+
+.session-badge-reward {
+  padding: 9px 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: 1px solid color-mix(in srgb, var(--yellow) 60%, var(--line));
+  border-radius: 11px;
+
+  background: color-mix(in srgb, var(--yellow) 9%, var(--panel));
+  text-align: left;
+
+  animation: badge-reward-in 0.55s ease-out both;
+}
+
+
+.session-badge-reward > i {
+  width: 33px;
+  height: 33px;
+
+  flex: 0 0 33px;
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: var(--panel-light);
+  font-size: 18px;
+  font-style: normal;
+}
+
+
+.session-badge-reward > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+
+.session-badge-reward small {
+  color: var(--yellow);
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+
+.session-badge-reward strong {
+  color: var(--text);
+  font-size: 11px;
+}
+
+
+@keyframes badge-reward-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
 .session-result-dots {
   display: flex;
   align-items: center;
