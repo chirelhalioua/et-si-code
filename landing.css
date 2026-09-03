@@ -269,6 +269,10 @@ button {
 
 
 .main-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
   transition:
     color 0.2s ease;
 }
@@ -277,6 +281,94 @@ button {
 .main-nav a:hover {
   color:
     var(--text);
+}
+
+.main-nav-icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   CONTACT ACCUEIL
+========================================================= */
+
+.home-contact {
+  width: min(1120px, calc(100% - 40px));
+  margin: 80px auto;
+  padding: clamp(26px, 5vw, 44px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(20px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+
+.home-contact-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 19px;
+  background: var(--yellow);
+  color: #11151a;
+}
+
+.home-contact-icon svg {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.home-contact-copy .section-label {
+  margin: 0 0 8px;
+}
+
+.home-contact-copy h2 {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: clamp(25px, 4vw, 36px);
+  letter-spacing: -0.035em;
+}
+
+.home-contact-copy > p:last-child {
+  max-width: 650px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.home-contact-link {
+  min-height: 52px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 13px;
+  background: var(--yellow);
+  color: #11151a;
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+}
+
+.home-contact-link:hover {
+  transform: translateY(-2px);
 }
 
 
@@ -1978,6 +2070,14 @@ html[data-theme="light"] .theme-moon {
   text-underline-offset: 4px;
 }
 
+.site-footer .footer-contact-link {
+  color: var(--text);
+  font-weight: 750;
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-underline-offset: 4px;
+}
+
 @media (min-width: 701px) {
   .site-footer {
     display: grid;
@@ -2007,6 +2107,22 @@ html[data-theme="light"] .theme-moon {
 }
 
 @media (max-width: 700px) {
+  .home-contact {
+    margin: 54px auto;
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .home-contact-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto;
+  }
+
+  .home-contact-link {
+    width: 100%;
+  }
+
   .footer-road-message {
     width: calc(100% - 40px);
   }
