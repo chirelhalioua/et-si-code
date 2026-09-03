@@ -6,11 +6,8 @@ html[data-theme="dark"] {
 
 html[data-theme="dark"] body {
   background:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
     radial-gradient(circle at 50% -15%, rgba(244, 207, 44, 0.045), transparent 35%),
     #0b0f16;
-  background-size: 72px 72px, 72px 72px, auto, auto;
 }
 
 html[data-theme="dark"] :is(.site-header, .series-header, .progress-header, .game-header) {
@@ -26,6 +23,21 @@ html[data-theme="light"] {
 }
 
 html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 50% -15%, rgba(244, 207, 44, 0.07), transparent 35%),
+    #f4f5f2;
+}
+
+html[data-theme="dark"] body.home-page {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    radial-gradient(circle at 50% -15%, rgba(244, 207, 44, 0.045), transparent 35%),
+    #0b0f16;
+  background-size: 72px 72px, 72px 72px, auto, auto;
+}
+
+html[data-theme="light"] body.home-page {
   background:
     linear-gradient(rgba(17, 21, 26, 0.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(17, 21, 26, 0.018) 1px, transparent 1px),
