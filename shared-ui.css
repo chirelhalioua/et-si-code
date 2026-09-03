@@ -6,8 +6,11 @@ html[data-theme="dark"] {
 
 html[data-theme="dark"] body {
   background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
     radial-gradient(circle at 50% -15%, rgba(244, 207, 44, 0.045), transparent 35%),
     #0b0f16;
+  background-size: 72px 72px, 72px 72px, auto, auto;
 }
 
 html[data-theme="dark"] :is(.site-header, .series-header, .progress-header, .game-header) {
@@ -24,8 +27,11 @@ html[data-theme="light"] {
 
 html[data-theme="light"] body {
   background:
+    linear-gradient(rgba(17, 21, 26, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 21, 26, 0.018) 1px, transparent 1px),
     radial-gradient(circle at 50% -15%, rgba(244, 207, 44, 0.07), transparent 35%),
     #f4f5f2;
+  background-size: 72px 72px, 72px 72px, auto, auto;
 }
 
 html[data-theme="light"] :is(.site-header, .series-header, .progress-header, .game-header) {
@@ -79,12 +85,230 @@ html[data-theme="light"] :is(.site-header, .series-header, .progress-header, .ga
 }
 
 :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
+  position: relative;
   min-height: 42px !important;
   padding: 4px !important;
   gap: 4px !important;
   border: 1px solid var(--line) !important;
   border-radius: 14px !important;
   box-shadow: none !important;
+}
+
+:is(.main-nav, .series-nav, .progress-nav, .game-nav) > a {
+  position: relative;
+  z-index: 2;
+}
+
+.nav-active-indicator {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+  background: var(--yellow);
+  box-shadow: 0 6px 16px rgba(244, 207, 44, 0.2);
+  pointer-events: none;
+  transition:
+    width 0.28s cubic-bezier(0.2, 0.75, 0.25, 1),
+    height 0.28s cubic-bezier(0.2, 0.75, 0.25, 1),
+    transform 0.28s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+:is(.main-nav, .series-nav, .progress-nav, .game-nav).has-active-indicator > a.is-active {
+  background: transparent !important;
+}
+
+:is(.main-nav, .series-nav, .progress-nav, .game-nav) > a svg {
+  transition: transform 0.18s ease;
+}
+
+:is(.main-nav, .series-nav, .progress-nav, .game-nav) > a:hover svg {
+  transform: translateY(-1px) scale(1.08);
+}
+
+/* Cartes et surfaces : même finition sur tout le site. */
+:is(
+  .series-choice,
+  .contact-card,
+  .account-panel,
+  .global-best-card,
+  .badges-section,
+  .series-card,
+  .mistake-card,
+  .how-card,
+  .feature-card
+) {
+  border-color: color-mix(in srgb, var(--yellow) 9%, var(--line)) !important;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+:is(.series-choice, .how-card, .feature-card, .badge-card.is-unlocked):hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--yellow) 32%, var(--line)) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+}
+
+/* Apparition progressive, activée par ui-enhancements.js. */
+.ui-reveal-item {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.ui-reveal-item.is-revealed {
+  animation: uiReveal 0.52s cubic-bezier(0.2, 0.72, 0.25, 1) forwards;
+  animation-delay: min(calc(var(--reveal-order, 0) * 55ms), 275ms);
+}
+
+@keyframes uiReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro-interactions communes aux boutons importants. */
+:is(
+  .primary-button,
+  .final-play,
+  .home-contact-link,
+  .contact-submit,
+  .series-choice > a,
+  .series-choice > button,
+  #account-login,
+  #account-signup,
+  .global-progress-link,
+  .review-mistakes-button
+) {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease !important;
+}
+
+:is(
+  .primary-button,
+  .final-play,
+  .home-contact-link,
+  .contact-submit,
+  .series-choice > a,
+  #account-login,
+  .global-progress-link,
+  .review-mistakes-button
+):not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 30px rgba(244, 207, 44, 0.16);
+  filter: brightness(1.025);
+}
+
+:is(
+  .primary-button,
+  .final-play,
+  .home-contact-link,
+  .contact-submit,
+  .series-choice > a,
+  #account-login,
+  .global-progress-link,
+  .review-mistakes-button
+):not(:disabled)::after {
+  content: "";
+  position: absolute;
+  top: -70%;
+  left: -45%;
+  width: 24%;
+  height: 240%;
+  background: rgba(255, 255, 255, 0.28);
+  transform: rotate(20deg);
+  transition: left 0.55s ease;
+  pointer-events: none;
+}
+
+:is(
+  .primary-button,
+  .final-play,
+  .home-contact-link,
+  .contact-submit,
+  .series-choice > a,
+  #account-login,
+  .global-progress-link,
+  .review-mistakes-button
+):not(:disabled):hover::after {
+  left: 125%;
+}
+
+:is(button, a):active {
+  transform: scale(0.98);
+}
+
+/* Résultats et badges. */
+.session-result-ring,
+.global-score-ring,
+.series-last-score {
+  animation: scoreReveal 0.65s cubic-bezier(0.18, 0.8, 0.25, 1) both;
+}
+
+@keyframes scoreReveal {
+  from { opacity: 0; transform: scale(0.82) rotate(-5deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.session-badge-reward,
+.badge-card.is-unlocked {
+  animation: badgeUnlock 0.58s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+.badge-card.is-unlocked .badge-icon {
+  filter: drop-shadow(0 5px 12px rgba(244, 207, 44, 0.22));
+}
+
+@keyframes badgeUnlock {
+  0% { opacity: 0; transform: scale(0.84) translateY(8px); }
+  70% { opacity: 1; transform: scale(1.025) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ui-confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ui-confetti {
+  position: absolute;
+  top: -20px;
+  left: var(--confetti-left);
+  width: 8px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--confetti-color);
+  animation: confettiFall var(--confetti-duration) var(--confetti-delay) ease-in forwards;
+}
+
+@keyframes confettiFall {
+  to {
+    transform: translate3d(var(--confetti-drift), 105vh, 0) rotate(620deg);
+    opacity: 0.8;
+  }
+}
+
+body {
+  animation: pageEnter 0.32s ease-out both;
+  transition: opacity 0.16s ease;
+}
+
+body.is-page-leaving {
+  opacity: 0;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
@@ -255,5 +479,14 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .back-to-top { transition: none; }
+  .ui-reveal-item { opacity: 1; transform: none; }
+  .ui-confetti-layer { display: none; }
 }
