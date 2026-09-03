@@ -191,6 +191,25 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
   :is(.header-inner, .series-header, .progress-header, .game-header) {
     min-height: 68px !important;
   }
+
+  .brand-title,
+  :is(.series-brand, .progress-brand) > span,
+  .game-logo-text {
+    font-size: 24px !important;
+  }
+
+  .brand-badge,
+  :is(.series-brand, .progress-brand) b,
+  .game-logo-question {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 19px !important;
+  }
+
+  .brand-main,
+  :is(.series-brand, .progress-brand, .game-brand) {
+    gap: 10px !important;
+  }
 }
 
 @media (max-width: 430px) {
@@ -206,20 +225,23 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
     display: block !important;
   }
 
+  .brand-title,
   :is(.series-brand, .progress-brand) > span,
   .game-logo-text {
-    font-size: 21px !important;
+    font-size: 24px !important;
   }
 
+  .brand-badge,
   :is(.series-brand, .progress-brand) b,
   .game-logo-question {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 17px !important;
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 19px !important;
   }
 
+  .brand-main,
   :is(.series-brand, .progress-brand, .game-brand) {
-    gap: 6px !important;
+    gap: 10px !important;
   }
 
   :is(.main-nav, .series-nav, .progress-nav, .game-nav) > a {
