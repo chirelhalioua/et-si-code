@@ -374,6 +374,9 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
   display: inline-grid !important;
   place-items: center !important;
   border-radius: 12px !important;
+  border-color: rgba(18, 25, 34, 0.11) !important;
+  background: #ffffff !important;
+  color: #151a22 !important;
 }
 
 :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) > :is(.theme-sun, .theme-moon) {
