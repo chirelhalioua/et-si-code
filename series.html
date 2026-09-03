@@ -33,14 +33,41 @@
         <span>ET SI</span><b>?</b>
       </a>
 
-      <nav class="series-nav" aria-label="Navigation principale">
-        <a href="index.html">Accueil</a>
-        <a class="is-active" href="series.html" aria-current="page">Jouer</a>
-        <a href="progression.html">Progression</a>
-        <button id="series-theme-toggle" type="button" aria-label="Changer de thème">
+      <div class="series-header-actions">
+        <nav class="series-nav" aria-label="Navigation principale">
+        <a href="index.html">
+          <svg class="series-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 11.5 12 4l9 7.5"></path>
+            <path d="M5.5 10.5V20h13v-9.5"></path>
+            <path d="M9.5 20v-5.5h5V20"></path>
+          </svg>
+          <span class="series-nav-label">Accueil</span>
+        </a>
+
+        <a class="is-active" href="series.html" aria-current="page">
+          <svg class="series-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path class="nav-icon-fill" d="m10 8 6 4-6 4Z"></path>
+          </svg>
+          <span class="series-nav-label">Jouer</span>
+        </a>
+
+        <a href="progression.html">
+          <svg class="series-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 20V10h4v10"></path>
+            <path d="M10 20V4h4v16"></path>
+            <path d="M16 20v-7h4v7"></path>
+            <path d="M3 20h18"></path>
+          </svg>
+          <span class="series-nav-label">Progression</span>
+        </a>
+
+        </nav>
+
+        <button id="series-theme-toggle" class="series-theme-toggle" type="button" aria-label="Changer de thème">
           <span aria-hidden="true">☾</span>
         </button>
-      </nav>
+      </div>
     </header>
 
     <main>
