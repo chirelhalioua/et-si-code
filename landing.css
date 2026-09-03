@@ -448,8 +448,9 @@ button {
 
 
 .theme-toggle {
-  width:
-    43px;
+  width: 42px;
+  min-height: 42px;
+  border-radius: 12px;
 
   border:
     1px solid
@@ -2645,6 +2646,12 @@ html[data-theme="light"] .theme-moon {
     display: block;
   }
 
+  .theme-toggle {
+    width: 36px;
+    min-height: 36px;
+    border-radius: 10px;
+  }
+
 
   .hero {
     min-height:
@@ -3062,13 +3069,9 @@ html[data-theme="light"] .theme-moon {
   }
 
 
-  .theme-toggle,
   .header-play {
-    width:
-      40px;
-
-    min-height:
-      40px;
+    width: 40px;
+    min-height: 40px;
   }
 
 
