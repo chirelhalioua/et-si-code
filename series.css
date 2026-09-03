@@ -70,38 +70,75 @@ button { font: inherit; }
   color: #11151a;
 }
 
+.series-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .series-nav {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
 }
 
-.series-nav a,
-.series-nav button {
-  min-height: 38px;
+.series-nav a {
+  min-height: 34px;
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid transparent;
+  justify-content: center;
+  gap: 6px;
   border-radius: 10px;
-  background: transparent;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
-  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.series-nav a:hover {
+  color: var(--text);
+  background: var(--panel-light);
 }
 
 .series-nav a.is-active {
-  border-color: var(--line);
-  background: var(--panel);
-  color: var(--yellow);
+  background: var(--yellow);
+  color: #11151a;
 }
 
-.series-nav button {
-  width: 38px;
+.series-nav-icon {
+  display: none;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.series-nav-icon .nav-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.series-theme-toggle {
+  width: 42px;
+  min-height: 42px;
   padding: 0;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  border-color: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
 }
 
 main { flex: 1; }
@@ -335,7 +372,12 @@ footer strong { color: var(--yellow); }
   .series-header { min-height: 58px; }
   .series-brand { font-size: 16px; }
   .series-brand b { width: 30px; height: 30px; }
-  .series-nav a { padding: 0 6px; font-size: 8px; justify-content: center; }
+  .series-nav { gap: 2px; padding: 3px; border-radius: 12px; }
+  .series-nav a { width: 34px; min-height: 30px; padding: 0; border-radius: 9px; }
+  .series-nav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .series-nav-icon { display: block; }
+  .series-header-actions { gap: 6px; }
+  .series-theme-toggle { width: 36px; min-height: 36px; border-radius: 10px; }
   .series-intro { padding: 42px 8px 24px; }
   .series-intro h1 { font-size: 34px; }
   .series-grid { grid-template-columns: 1fr; gap: 12px; }
