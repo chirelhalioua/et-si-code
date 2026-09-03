@@ -96,6 +96,70 @@
 
   let celebrated = false;
 
+  const chartProperties = [
+    "--score-percent",
+    "--bar-value",
+    "--history-percent"
+  ];
+
+  const chartSelector = chartProperties
+    .map(property => `[style*="${property}"]`)
+    .join(",");
+
+  const chartObserver = !reduceMotion && "IntersectionObserver" in window
+    ? new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          const element = entry.target;
+          const property = element.dataset.uiChartProperty;
+          const target = element.dataset.uiChartTarget;
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              element.style.setProperty(property, target);
+            });
+          });
+
+          chartObserver.unobserve(element);
+        });
+      }, { threshold: 0.2 })
+    : null;
+
+  function registerChartElement(element) {
+    if (!(element instanceof Element)) return;
+
+    const property = chartProperties.find(item =>
+      element.style.getPropertyValue(item).trim() !== ""
+    );
+
+    if (!property) return;
+
+    const target = Number.parseFloat(element.style.getPropertyValue(property));
+    if (!Number.isFinite(target) || target <= 0) return;
+
+    const registrationKey = `${property}:${target}`;
+    if (element.dataset.uiChartRegistration === registrationKey) return;
+
+    element.dataset.uiChartRegistration = registrationKey;
+    element.dataset.uiChartProperty = property;
+    element.dataset.uiChartTarget = String(Math.min(100, Math.max(0, target)));
+
+    if (reduceMotion || !chartObserver) return;
+
+    element.style.setProperty(property, "0");
+    void element.offsetWidth;
+    chartObserver.observe(element);
+  }
+
+  function registerCharts(root = document) {
+    if (root instanceof Element && root.matches(chartSelector)) {
+      registerChartElement(root);
+    }
+
+    root.querySelectorAll?.(chartSelector).forEach(registerChartElement);
+  }
+
   function celebratePerfectScore(root = document) {
     if (reduceMotion || celebrated) return;
 
@@ -129,16 +193,28 @@
   setupNavIndicators();
   registerRevealItems();
   celebratePerfectScore();
+  registerCharts();
 
   const mutationObserver = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
+      if (mutation.type === "attributes") {
+        registerChartElement(mutation.target);
+        return;
+      }
+
       mutation.addedNodes.forEach(node => {
         if (!(node instanceof Element)) return;
         registerRevealItems(node);
         celebratePerfectScore(node);
+        registerCharts(node);
       });
     });
   });
 
-  mutationObserver.observe(document.body, { childList: true, subtree: true });
+  mutationObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["style"]
+  });
 })();

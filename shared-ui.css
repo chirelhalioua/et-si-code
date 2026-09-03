@@ -257,6 +257,35 @@ html[data-theme="light"] :is(.site-header, .series-header, .progress-header, .ga
 }
 
 /* Résultats et badges. */
+@property --score-percent {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --bar-value {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --history-percent {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+[style*="--score-percent"] {
+  transition: --score-percent 1.05s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+[style*="--bar-value"],
+[style*="--history-percent"] {
+  transition:
+    --bar-value 0.9s cubic-bezier(0.2, 0.75, 0.25, 1),
+    --history-percent 0.9s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
 .session-result-ring,
 .global-score-ring,
 .series-last-score {
