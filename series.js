@@ -168,8 +168,6 @@ themeToggle?.addEventListener("click", () => {
 
   document.documentElement.dataset.theme = next;
   localStorage.setItem(THEME_KEY, next);
-  themeToggle.querySelector("span").textContent =
-    next === "light" ? "☀" : "☾";
 });
 
 async function init() {
@@ -192,8 +190,6 @@ async function init() {
     grid.innerHTML = "<p class=\"series-loading\">Impossible de charger les séries pour le moment.</p>";
   }
 
-  themeToggle.querySelector("span").textContent =
-    document.documentElement.dataset.theme === "light" ? "☀" : "☾";
 }
 
 init();

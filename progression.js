@@ -1696,22 +1696,7 @@ badgesSection?.addEventListener(
 
 
 function updateThemeIcon() {
-
-  const icon =
-    themeToggle
-      ?.querySelector(
-        ".theme-icon"
-      );
-
-
-  if (icon) {
-
-    icon.textContent =
-      document.documentElement.dataset.theme === "light"
-        ? "☀"
-        : "☾";
-
-  }
+  // L’icône SVG appropriée est affichée par le thème CSS.
 
 }
 

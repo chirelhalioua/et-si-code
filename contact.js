@@ -18,13 +18,7 @@
     const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
     document.documentElement.dataset.theme = next;
     localStorage.setItem("etsi-theme", next);
-    themeToggle.querySelector("span").textContent = next === "light" ? "☀" : "☾";
   });
-
-  if (themeToggle) {
-    themeToggle.querySelector("span").textContent =
-      document.documentElement.dataset.theme === "light" ? "☀" : "☾";
-  }
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();

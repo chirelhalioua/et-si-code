@@ -21,10 +21,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
   <link rel="stylesheet" href="series.css">
-  <link rel="stylesheet" href="shared-ui.css?v=8">
+  <link rel="stylesheet" href="shared-ui.css?v=9">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase-sync.js" defer></script>
-  <script src="series.js" defer></script>
+  <script src="series.js?v=2" defer></script>
 </head>
 
 <body>
@@ -74,7 +74,17 @@
         </nav>
 
         <button id="series-theme-toggle" class="series-theme-toggle" type="button" aria-label="Changer de thème">
-          <span aria-hidden="true">☾</span>
+          <span class="theme-sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3.6"></circle>
+              <path d="M12 2.2v2.2M12 19.6v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.2 12h2.2M19.6 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"></path>
+            </svg>
+          </span>
+          <span class="theme-moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M20 15.2A8.2 8.2 0 0 1 8.8 4a8.3 8.3 0 1 0 11.2 11.2Z"></path>
+            </svg>
+          </span>
         </button>
       </div>
     </header>

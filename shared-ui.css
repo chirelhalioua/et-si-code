@@ -366,10 +366,43 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
 }
 
 :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) {
+  position: relative;
   width: 42px !important;
   min-width: 42px !important;
   min-height: 42px !important;
+  padding: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
   border-radius: 12px !important;
+}
+
+:is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) > :is(.theme-sun, .theme-moon) {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+:is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-theme="light"] :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) .theme-sun,
+html[data-theme="dark"] :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) .theme-moon {
+  display: flex !important;
+}
+
+html[data-theme="dark"] :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) .theme-sun,
+html[data-theme="light"] :is(.theme-toggle, .series-theme-toggle, .progress-theme-toggle) .theme-moon {
+  display: none !important;
 }
 
 .back-to-top {
