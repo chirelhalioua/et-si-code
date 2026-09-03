@@ -32,6 +32,10 @@ html[data-theme="light"] :is(.site-header, .series-header, .progress-header, .ga
   background: color-mix(in srgb, #f4f5f2 88%, transparent);
 }
 
+:is(.series-header, .progress-header, .game-header) {
+  min-height: 78px !important;
+}
+
 :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
   min-height: 42px !important;
   padding: 4px !important;
@@ -138,6 +142,12 @@ html[data-theme="light"] :is(.main-nav, .series-nav, .progress-nav, .game-nav) {
     min-width: 36px !important;
     min-height: 36px !important;
     border-radius: 10px !important;
+  }
+}
+
+@media (max-width: 650px) {
+  :is(.header-inner, .series-header, .progress-header, .game-header) {
+    min-height: 68px !important;
   }
 }
 
