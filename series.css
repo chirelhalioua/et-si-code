@@ -485,3 +485,10 @@ main { flex: 1; }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 500px) {
+  .series-header { min-height: 54px; }
+  .series-intro { padding: 22px 8px 16px; }
+  .series-intro h1 { margin: 5px 0 6px; font-size: 27px; }
+  .series-intro p { font-size: 10px; }
+}

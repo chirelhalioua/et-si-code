@@ -140,10 +140,14 @@
 
 @media (max-width: 640px) {
   .contact-main { padding-bottom: 44px; }
-  .contact-intro { padding-top: 48px; }
+  .contact-intro { padding-top: 42px; }
   .contact-row { grid-template-columns: 1fr; gap: 0; }
   .contact-card { border-radius: 19px; }
   .contact-card-heading { align-items: flex-start; }
   .contact-submit-row { align-items: stretch; flex-direction: column; }
   .contact-submit { width: 100%; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 500px) {
+  .contact-intro { padding-top: 22px; padding-bottom: 16px; }
 }

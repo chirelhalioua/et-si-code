@@ -222,10 +222,14 @@ button {
   letter-spacing: 0.15em;
 }
 
+.progress-kicker {
+  font-size: 9px;
+}
+
 
 .progress-intro h1 {
-  margin: 10px 0 12px;
-  font-size: clamp(30px, 5vw, 52px);
+  margin: 9px 0 10px;
+  font-size: clamp(34px, 5vw, 54px);
   line-height: 1;
   letter-spacing: -0.055em;
 }
@@ -235,7 +239,7 @@ button {
   width: min(100%, 600px);
   margin: 0 auto;
   color: var(--text-soft);
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -1464,29 +1468,29 @@ button {
   }
 
   .progress-header {
-    min-height: 56px;
+    min-height: 58px;
   }
 
   .progress-brand {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .progress-brand b {
-    width: 31px;
-    height: 31px;
-    font-size: 18px;
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
   }
 
   .progress-intro {
-    padding: 36px 0 24px;
+    padding: 42px 8px 24px;
   }
 
   .progress-intro h1 {
-    font-size: 31px;
+    font-size: 34px;
   }
 
   .progress-intro p {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .account-panel {
